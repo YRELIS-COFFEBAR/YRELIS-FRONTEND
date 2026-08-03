@@ -1,12 +1,53 @@
-import { Injectable, computed, effect, signal } from '@angular/core';
+import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 import { CartItem, OrderInfo, PaymentMethod, Product } from '../models/product.model';
 
 const CART_KEY = 'yrelis-cart';
-const ORDER_COUNTER_KEY = 'yrelis-order-counter';
+// Cambia aquí si tu backend corre en otra URL/puerto.
+const API_URL = 'http://localhost:8080';
+
+interface OrderItemPayload {
+  productId: string;
+  quantity: number;
+  addonName?: string;
+  addonPrice?: number;
+}
+
+interface CreateOrderPayload {
+  customerName: string;
+  paymentMethod: PaymentMethod;
+  items: OrderItemPayload[];
+}
+
+interface OrderResponse {
+  orderNumber: number;
+  customerName: string;
+  paymentMethod: string;
+  status: string;
+  paymentStatus: string;
+  transactionId?: string;
+  subtotal: number;
+  total: number;
+  createdAt: string;
+}
+
+type PaymentResultStatus = 'APPROVED' | 'REJECTED' | 'PENDING' | 'FAILED' | 'CANCELLED' | 'REFUNDED';
+
+interface PaymentResponse {
+  orderNumber: number;
+  paymentMethod: string;
+  status: PaymentResultStatus;
+  transactionId?: string;
+  amount: number;
+  message?: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class OrderService {
+  private readonly http = inject(HttpClient);
+
   /* ---------------- Estado del carrito ---------------- */
   private readonly itemsSignal = signal<CartItem[]>(this.loadCart());
   readonly items = this.itemsSignal.asReadonly();
@@ -61,41 +102,44 @@ export class OrderService {
     return this.itemsSignal().find((item) => item.product.id === productId)?.quantity ?? 0;
   }
 
-  /* ---------------- Pedido ---------------- */
-  /**
-   * Registra el pedido de forma local.
-   * TODO-backend: aquí se conectará con Spring Boot + Izipay.
-   * 1. Enviar el pedido (items, cliente, método de pago) al backend.
-   * 2. Iniciar transacción en el terminal POS Izipay (tarjeta) o generar QR (yape/plin).
-   * 3. Recibir la confirmación del pago y guardar el pedido en MySQL.
-   */
-  placeOrder(customerName: string, paymentMethod: PaymentMethod): Promise<OrderInfo> {
+  /* ---------------- Pedido (backend Spring Boot + Izipay) ---------------- */
+  async placeOrder(customerName: string, paymentMethod: PaymentMethod): Promise<OrderInfo> {
     const items = this.itemsSignal();
-    const order: OrderInfo = {
-      orderNumber: this.nextOrderNumber(),
+    const payload: CreateOrderPayload = {
       customerName: customerName.trim() || 'Cliente',
       paymentMethod,
-      items,
-      subtotal: this.subtotal(),
-      total: this.subtotal(),
-      createdAt: new Date(),
+      items: items.map((item) => ({
+        productId: item.product.id,
+        quantity: item.quantity,
+        addonName: item.product.addon?.label,
+        addonPrice: item.product.addon?.price,
+      })),
     };
 
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        this.lastOrderSignal.set(order);
-        this.itemsSignal.set([]);
-        resolve(order);
-      }, 1800);
-    });
-  }
+    const order = await firstValueFrom(this.http.post<OrderResponse>(`${API_URL}/api/orders`, payload));
 
-  private nextOrderNumber(): number {
-    const raw = localStorage.getItem(ORDER_COUNTER_KEY);
-    const current = raw ? Number(raw) : 100;
-    const next = current + 1;
-    localStorage.setItem(ORDER_COUNTER_KEY, String(next));
-    return next;
+    const payment = await firstValueFrom(
+      this.http.post<PaymentResponse>(`${API_URL}/api/orders/${order.orderNumber}/payments`, {
+        paymentMethod,
+      }),
+    );
+
+    if (payment.status !== 'APPROVED') {
+      throw new Error(payment.message ?? 'El pago fue rechazado.');
+    }
+
+    const info: OrderInfo = {
+      orderNumber: order.orderNumber,
+      customerName: order.customerName,
+      paymentMethod,
+      items,
+      subtotal: order.subtotal,
+      total: order.total,
+      createdAt: new Date(order.createdAt),
+    };
+    this.lastOrderSignal.set(info);
+    this.itemsSignal.set([]);
+    return info;
   }
 
   /* ---------------- Persistencia local ---------------- */
