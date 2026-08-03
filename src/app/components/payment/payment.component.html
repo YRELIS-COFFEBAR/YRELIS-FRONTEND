@@ -3,7 +3,7 @@
 
     @if (order.isEmpty() && step() !== 'success') {
       <!-- Sin productos -->
-      <div class="empty-state animate-fade-up">
+      <div class="empty-state">
         <div class="empty-icon">
           <svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <rect x="1" y="4" width="22" height="16" rx="2"></rect>
@@ -18,7 +18,7 @@
 
     @if (!order.isEmpty() && step() === 'method') {
       <!-- PASO 1: Datos y método de pago -->
-      <div class="pay-layout animate-fade-up">
+      <div class="pay-layout">
         <div class="pay-main">
           <a routerLink="/carrito" class="back-link">
             <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
@@ -50,12 +50,16 @@
               class="method-card"
               [class.selected]="paymentMethod() === 'yape'"
               (click)="selectMethod('yape')"
+              data-method="yape"
             >
-              <span class="method-icon yape">
-                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6a8.5 8.5 0 1 1 16.1-3.9Z"></path>
-                  <path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"></path>
-                </svg>
+              <span class="method-icon">
+                <img 
+                  src="assets/images/payments/logo-yape.png" 
+                  alt="Yape" 
+                  width="44" 
+                  height="44"
+                  (error)="onLogoError($event)"
+                />
               </span>
               <span class="method-name">Yape</span>
               <span class="method-desc">Escanea el código QR</span>
@@ -67,12 +71,16 @@
               class="method-card"
               [class.selected]="paymentMethod() === 'plin'"
               (click)="selectMethod('plin')"
+              data-method="plin"
             >
-              <span class="method-icon plin">
-                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <circle cx="12" cy="12" r="9"></circle>
-                  <path d="M9 8.5c0-1.5 1.2-2.5 3-2.5s3 1 3 2.6c0 2.4-6 1.2-6 5.2 0 1.4 1.2 2.2 3 2.2s3-.8 3-2.2"></path>
-                </svg>
+              <span class="method-icon">
+                <img 
+                  src="assets/images/payments/logo-plin.png" 
+                  alt="Plin" 
+                  width="44" 
+                  height="44"
+                  (error)="onLogoError($event)"
+                />
               </span>
               <span class="method-name">Plin</span>
               <span class="method-desc">Escanea el código QR</span>
@@ -84,12 +92,16 @@
               class="method-card"
               [class.selected]="paymentMethod() === 'visa'"
               (click)="selectMethod('visa')"
+              data-method="visa"
             >
-              <span class="method-icon visa">
-                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" aria-hidden="true">
-                  <rect x="1.5" y="5" width="21" height="14" rx="2.5" fill="#0d3b8f" />
-                  <text x="12" y="16.5" text-anchor="middle" font-family="Poppins, sans-serif" font-size="7.5" font-style="italic" font-weight="700" fill="#fff" letter-spacing="1">VISA</text>
-                </svg>
+              <span class="method-icon">
+                <img 
+                  src="assets/images/payments/logo-visa.png" 
+                  alt="Visa" 
+                  width="44" 
+                  height="44"
+                  (error)="onLogoError($event)"
+                />
               </span>
               <span class="method-name">Tarjeta Visa</span>
               <span class="method-desc">Acerca la tarjeta al POS</span>
@@ -129,21 +141,16 @@
 
     @if (step() === 'paying') {
       <!-- PASO 2: Procesando pago -->
-      <div class="paying animate-fade-up">
+      <div class="paying">
         @if (paymentMethod() === 'visa') {
           <div class="pos-box">
-            <div class="nfc-rings">
-              <span class="ring r1"></span>
-              <span class="ring r2"></span>
-              <span class="ring r3"></span>
-              <div class="pos-screen">
-                <svg viewBox="0 0 40 26" width="52" height="34" fill="none" stroke="#0d3b8f" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
-                  <path d="M5 15c5-9 12-10 18-4 2 2 3 4 4 5h-9"></path>
-                  <path d="M13 15h-6c2 2 4 2 6 0Z"></path>
-                </svg>
-                <span class="pos-amount">{{ formatPrice(order.subtotal()) }}</span>
-                <span class="pos-status">Aprobado</span>
-              </div>
+            <div class="pos-screen">
+              <svg viewBox="0 0 40 26" width="52" height="34" fill="none" stroke="#8db3e8" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                <path d="M5 15c5-9 12-10 18-4 2 2 3 4 4 5h-9"></path>
+                <path d="M13 15h-6c2 2 4 2 6 0Z"></path>
+              </svg>
+              <span class="pos-amount">{{ formatPrice(order.subtotal()) }}</span>
+              <span class="pos-status">Aprobado</span>
             </div>
             <h2 class="paying-title">Acerca la tarjeta al terminal</h2>
             <p class="paying-sub">
@@ -153,12 +160,25 @@
               <span class="spinner"></span>
               <span>Esperando al terminal Izipay...</span>
             </div>
+            <!-- BOTÓN VOLVER -->
+            <button 
+              type="button" 
+              class="btn btn-outline btn-block" 
+              style="margin-top: 20px;"
+              (click)="goBackToMethod()"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Volver a métodos de pago
+            </button>
           </div>
         } @else {
           <div class="qr-box">
             <div class="qr-frame">
               <img
-                [src]="paymentMethod() === 'yape' ? 'assets/images/payments/qr-yape.png' : 'assets/images/payments/qr-plin.png'"
+                src="assets/images/qr/qr.jpg"
                 [alt]="paymentLabel(paymentMethod()) + ' QR'"
                 (error)="onQrError($event)"
               />
@@ -175,6 +195,19 @@
               <span class="spinner"></span>
               <span>Esperando confirmación del pago...</span>
             </div>
+            <!-- BOTÓN VOLVER -->
+            <button 
+              type="button" 
+              class="btn btn-outline btn-block" 
+              style="margin-top: 20px;"
+              (click)="goBackToMethod()"
+            >
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="19" y1="12" x2="5" y2="12"></line>
+                <polyline points="12 19 5 12 12 5"></polyline>
+              </svg>
+              Volver a métodos de pago
+            </button>
           </div>
         }
       </div>
@@ -183,7 +216,7 @@
     @if (step() === 'success') {
       <!-- PASO 3: Confirmación -->
       @if (orderInfo(); as info) {
-        <div class="success animate-fade-up">
+        <div class="success">
           <div class="checkmark">
             <svg viewBox="0 0 52 52" width="92" height="92" aria-hidden="true">
               <circle class="check-circle" cx="26" cy="26" r="24" fill="none" />

@@ -49,6 +49,13 @@ export class PaymentComponent {
     }
   }
 
+  /**
+   * Vuelve al paso de selección de método de pago
+   */
+  goBackToMethod(): void {
+    this.step.set('method');
+  }
+
   newOrder(): void {
     this.router.navigate(['/menu']);
   }
@@ -66,9 +73,34 @@ export class PaymentComponent {
     return labels[method];
   }
 
+  // ===== MANEJO DE ERRORES DE IMÁGENES =====
+
+  /**
+   * Maneja errores de carga de logos de métodos de pago
+   */
+  onLogoError(event: Event): void {
+    const img = event.target as HTMLImageElement;
+    // Evita bucles infinitos
+    img.onerror = null;
+    // Logo por defecto si la imagen no existe
+    img.src = 'assets/images/payments/logo-default.png';
+    // Opcional: agregar clase para estilizar el error
+    img.classList.add('img-error');
+    console.warn('Logo no encontrado, usando default:', img.src);
+  }
+
+  /**
+   * Maneja errores de carga de códigos QR
+   */
   onQrError(event: Event): void {
     const img = event.target as HTMLImageElement;
+    // Evita bucles infinitos
     img.onerror = null;
-    img.src = `assets/images/payments/${this.paymentMethod() === 'yape' ? 'qr-yape' : 'qr-plin'}.svg`;
+    // Usar imagen de assets/images/qr/qr.jpg
+    img.src = 'assets/images/qr/qr.jpg';
+    // Si falla, mostrar alt
+    img.alt = 'QR no disponible';
+    img.classList.add('qr-error');
+    console.warn('QR no encontrado, usando default');
   }
 }

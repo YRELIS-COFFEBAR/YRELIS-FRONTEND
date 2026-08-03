@@ -19,7 +19,7 @@
     </header>
 
     @if (order.isEmpty()) {
-      <div class="empty-state animate-fade-up">
+      <div class="empty-state">
         <div class="empty-icon">
           <svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
             <circle cx="9" cy="21" r="1.6"></circle>
@@ -36,7 +36,7 @@
         <!-- Lista de items -->
         <div class="cart-list">
           @for (item of order.items(); track item.product.id) {
-            <article class="cart-item animate-fade-up">
+            <article class="cart-item">
               <div class="cart-item-media">
                 <img [src]="item.product.image" [alt]="item.product.name" (error)="onImageError($event)" />
               </div>

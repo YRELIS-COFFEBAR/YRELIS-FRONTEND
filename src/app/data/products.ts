@@ -1,26 +1,50 @@
 import { Category, Product } from '../models/product.model';
 
-const img = (name: string) => `assets/images/products/${name}`;
+// Función para obtener la ruta de la imagen correcta según la categoría y el nombre del archivo
+const img = (category: string, filename: string) => {
+  // Mapeo de categorías a carpetas
+  const folderMap: Record<string, string> = {
+    'almuerzos': 'almuerzos-confortables',
+    'piqueo': 'pique',
+    'desayunos': 'desayunos',
+    'jugos': 'jugos',
+    'antojitos': 'antojitos',
+    'dulces': 'dulces',
+    'infusiones': 'infusiones',
+    'cafes': 'cafes',
+    'frappes': 'frappes',
+    'refrescantes': 'refrescantes',
+    'icecoffee': 'ice-coffee',
+    'cervezas': 'cervezas-gaseosas',
+    'bebidas-hot': 'bebidas-hot',
+    'shots': 'shot',
+    'cocteles-clasicos': 'cocteles',
+    'cocteles-cafe': 'coteleria-cafe',
+    'tendencia': 'cocteles-tendencia'
+  };
+  
+  const folder = folderMap[category] || category;
+  return `assets/images/placeholders/${folder}/${filename}`;
+};
 
 export const CATEGORIES: Category[] = [
-  { id: 'almuerzos', name: 'Almuerzo Confortable', image: img('lomo-saltado.jpg') },
-  { id: 'piqueo', name: 'Piqueo', image: img('tequenos.jpg') },
-  { id: 'desayunos', name: 'Desayunos', image: img('desayuno-americano.jpg') },
-  { id: 'jugos', name: 'Jugos Naturales', image: img('jugos.jpg') },
-  { id: 'antojitos', name: 'Antojitos', image: img('hamburguesa.jpg') },
-  { id: 'dulces', name: 'Dulces', image: img('pancakes.jpg') },
-  { id: 'infusiones', name: 'Infusiones Calientes', image: img('infusiones.jpg') },
-  { id: 'cafes', name: 'Cafés', image: img('cafes.jpg') },
-  { id: 'frappes', name: 'Frappés', image: img('frappes.jpg') },
-  { id: 'refrescantes', name: 'Refrescantes', image: img('limonada.jpg') },
-  { id: 'icecoffee', name: 'Ice Coffee', image: img('ice-coffee.jpg') },
-  { id: 'cervezas', name: 'Cervezas y Gaseosas', image: img('cervezas.jpg') },
-  { id: 'bebidas-hot', name: 'Bebidas Hot', image: img('calientitos.jpg') },
-  { id: 'happy-hour', name: 'Happy Hour', image: img('cocteles.jpg') },
-  { id: 'shots', name: 'Shots', image: img('shots.jpg') },
-  { id: 'cocteles-clasicos', name: 'Coctelería Clásica', image: img('cocteles.jpg') },
-  { id: 'cocteles-cafe', name: 'Coctelería Café', image: img('cocteles.jpg') },
-  { id: 'tendencia', name: 'Cocteles de Tendencia', image: img('cocteles.jpg') },
+  { id: 'almuerzos', name: 'Almuerzo Confortable', image: 'assets/images/placeholders/almuerzos-confortables/lomo-saltado.jpg' },
+  { id: 'piqueo', name: 'Piqueo', image: 'assets/images/placeholders/pique/tequeños-queso.jpg' },
+  { id: 'desayunos', name: 'Desayunos', image: 'assets/images/placeholders/desayunos/desayuno-americano.jpg' },
+  { id: 'jugos', name: 'Jugos Naturales', image: 'assets/images/placeholders/jugos/jugo-surtido.jpg' },
+  { id: 'antojitos', name: 'Antojitos', image: 'assets/images/placeholders/antojitos/hamburguesa.jpg' },
+  { id: 'dulces', name: 'Dulces', image: 'assets/images/placeholders/dulces/pancakes-arandanos.jpg' },
+  { id: 'infusiones', name: 'Infusiones Calientes', image: 'assets/images/placeholders/infusiones/infusiones-miel.jpg' },
+  { id: 'cafes', name: 'Cafés', image: 'assets/images/placeholders/cafes/capuccino.jpg' },
+  { id: 'frappes', name: 'Frappés', image: 'assets/images/placeholders/frappes/frappe-claisco.jpg' },
+  { id: 'refrescantes', name: 'Refrescantes', image: 'assets/images/placeholders/refrescantes/liminada-clasica.jpg' },
+  { id: 'icecoffee', name: 'Ice Coffee', image: 'assets/images/placeholders/ice-coffee/ice-latte.jpg' },
+  { id: 'cervezas', name: 'Cervezas y Gaseosas', image: 'assets/images/placeholders/cervezas-gaseosas/cusqueña.jpeg' },
+  { id: 'bebidas-hot', name: 'Bebidas Hot', image: 'assets/images/placeholders/bebidas-hot/calientito1.jpg' },
+  { id: 'shots', name: 'Shots', image: 'assets/images/placeholders/shot/tequila.jpg' },
+  { id: 'cocteles-clasicos', name: 'Coctelería Clásica', image: 'assets/images/placeholders/cocteles/pisco-sour.jpg' },
+  { id: 'cocteles-cafe', name: 'Coctelería Café', image: 'assets/images/placeholders/coteleria-cafe/espresso-martini.jpg' },
+  { id: 'tendencia', name: 'Cocteles de Tendencia', image: 'assets/images/placeholders/cocteles-tendencia/aperol-spritz.jpg' },
 ];
 
 export const PRODUCTS: Product[] = [
@@ -31,7 +55,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con chuleta o pechuga de pollo.',
     price: 22,
     category: 'almuerzos',
-    image: img('fetuccini-huancaina.jpg'),
+    image: img('almuerzos', 'fetuccini-huancaina.jpg'),
   },
   {
     id: 'fetuccini-huancaina-carne',
@@ -39,7 +63,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con lomo saltado, churrasco o bisteck.',
     price: 28,
     category: 'almuerzos',
-    image: img('fetuccini-huancaina.jpg'),
+    image: img('almuerzos', 'fetuccini-huancaina.jpg'),
   },
   {
     id: 'fetuccini-pesto-pollo',
@@ -47,7 +71,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con chuleta o pechuga de pollo.',
     price: 22,
     category: 'almuerzos',
-    image: img('fetuccini-pesto.jpg'),
+    image: img('almuerzos', 'fetuccini-pesto.jpg'),
   },
   {
     id: 'fetuccini-pesto-carne',
@@ -55,7 +79,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con lomo saltado, churrasco o bisteck.',
     price: 20,
     category: 'almuerzos',
-    image: img('fetuccini-pesto.jpg'),
+    image: img('almuerzos', 'fetuccini-pesto.jpg'),
   },
   {
     id: 'fetuccini-alfredo',
@@ -63,7 +87,7 @@ export const PRODUCTS: Product[] = [
     description: 'Salsa bechamel - jamón, crema de leche, parmesano.',
     price: 20,
     category: 'almuerzos',
-    image: img('fetuccini-alfredo.jpg'),
+    image: img('almuerzos', 'fetuccini-alfredo.jpg'),
   },
   {
     id: 'arroz-chaufa-carne',
@@ -71,7 +95,7 @@ export const PRODUCTS: Product[] = [
     description: 'Carne.',
     price: 25,
     category: 'almuerzos',
-    image: img('arroz-chaufa.jpg'),
+    image: img('almuerzos', 'arroz-chaufa.jpg'),
   },
   {
     id: 'arroz-chaufa-pollo',
@@ -79,7 +103,7 @@ export const PRODUCTS: Product[] = [
     description: 'Pollo.',
     price: 20,
     category: 'almuerzos',
-    image: img('arroz-chaufa.jpg'),
+    image: img('almuerzos', 'arroz-chaufa.jpg'),
   },
   {
     id: 'lomo-saltado',
@@ -87,7 +111,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con arroz y papas fritas.',
     price: 28,
     category: 'almuerzos',
-    image: img('lomo-saltado.jpg'),
+    image: img('almuerzos', 'lomo-saltado.jpg'),
     badge: 'Popular',
   },
   {
@@ -96,7 +120,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con arroz y papas fritas.',
     price: 25,
     category: 'almuerzos',
-    image: img('pollo-saltado.jpg'),
+    image: img('almuerzos', 'pollo-saltado.jpg'),
   },
   {
     id: 'cordon-blue',
@@ -104,7 +128,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con arroz, papa dorada en salsa de champiñones.',
     price: 25,
     category: 'almuerzos',
-    image: img('cordon-blue.jpg'),
+    image: img('almuerzos', 'cordon-blue.jpg'),
   },
   {
     id: 'bisteck-pobre',
@@ -112,7 +136,7 @@ export const PRODUCTS: Product[] = [
     description: 'Con arroz, papas fritas, plátano y huevo.',
     price: 28,
     category: 'almuerzos',
-    image: img('bisteck-pobre.jpg'),
+    image: img('almuerzos', 'bistek-pobre.jpg'),
   },
   {
     id: 'pollo-plancha',
@@ -120,7 +144,7 @@ export const PRODUCTS: Product[] = [
     description: 'Elige 2 guarniciones: ensalada cocida, ensalada fresca, arroz o papa coctel.',
     price: 20,
     category: 'almuerzos',
-    image: img('pollo-plancha.jpg'),
+    image: img('almuerzos', 'pollo-plancha.jpg'),
   },
 
   /* ---------------- PIQUEO ---------------- */
@@ -130,7 +154,7 @@ export const PRODUCTS: Product[] = [
     description: 'Rellenos con queso + salsa de guacamole.',
     price: 18,
     category: 'piqueo',
-    image: img('tequenos.jpg'),
+    image: img('piqueo', 'tequeños-queso.jpg'),
   },
   {
     id: 'chicharron-pollo',
@@ -138,7 +162,7 @@ export const PRODUCTS: Product[] = [
     description: 'Marinados en salsa de casa + papas fritas y ensalada mixta.',
     price: 22,
     category: 'piqueo',
-    image: img('chicharron-pollo.jpg'),
+    image: img('piqueo', 'chicharron-pollo.jpg'),
   },
   {
     id: 'salchipapa-yrelis',
@@ -146,7 +170,7 @@ export const PRODUCTS: Product[] = [
     description: 'Papas fritas, chorizo, hotdog, pollo deshilachado, huevo frito, salsa de la casa.',
     price: 22,
     category: 'piqueo',
-    image: img('salchipapa.jpg'),
+    image: img('piqueo', 'salchipapa-yrelis.jpg'),
     badge: 'Favorito',
   },
   {
@@ -155,7 +179,7 @@ export const PRODUCTS: Product[] = [
     description: 'Aderezo casero, bañadas en salsa acevichada (limón, apio, culantro, ajo, kion) + papas fritas.',
     price: 22,
     category: 'piqueo',
-    image: img('alitas-bbq.jpg'),
+    image: img('piqueo', 'alitas-bbq.jpg'),
   },
 
   /* ---------------- DESAYUNOS ---------------- */
@@ -165,7 +189,7 @@ export const PRODUCTS: Product[] = [
     description: 'Huevos revueltos, tostadas, café o jugo.',
     price: 18,
     category: 'desayunos',
-    image: img('desayuno-americano.jpg'),
+    image: img('desayunos', 'desayuno-americano.jpg'),
   },
   {
     id: 'desayuno-continental',
@@ -173,7 +197,7 @@ export const PRODUCTS: Product[] = [
     description: 'Tostadas, huevo, tocino y panqueque.',
     price: 20,
     category: 'desayunos',
-    image: img('desayuno-continental.jpg'),
+    image: img('desayunos', 'desayuno-continental.jpg'),
   },
   {
     id: 'desayuno-yrelis',
@@ -181,7 +205,7 @@ export const PRODUCTS: Product[] = [
     description: 'Tostadas, plátano, fresa, palta, huevo, café o jugo.',
     price: 18,
     category: 'desayunos',
-    image: img('desayuno-yrelis.jpg'),
+    image: img('desayunos', 'desayuno-yrelis.jpg'),
   },
   {
     id: 'omelette-leche',
@@ -189,18 +213,18 @@ export const PRODUCTS: Product[] = [
     description: 'Clásico (huevo-jamón) · Espinaca · Champiñones (huevo-champiñones-jamón).',
     price: 18,
     category: 'desayunos',
-    image: img('omelette.jpg'),
+    image: img('desayunos', 'omelette-leche.jpg'),
   },
 
   /* ---------------- JUGOS ---------------- */
-  { id: 'jugo-papaya', name: 'Jugo de Papaya', description: 'Preparado al momento.', price: 7, category: 'jugos', image: img('jugos.jpg') },
-  { id: 'jugo-pina', name: 'Jugo de Piña', description: 'Preparado al momento.', price: 7, category: 'jugos', image: img('jugos.jpg') },
-  { id: 'jugo-fresa', name: 'Jugo de Fresa', description: 'Preparado al momento.', price: 8, category: 'jugos', image: img('jugos.jpg') },
-  { id: 'jugo-mango', name: 'Jugo de Mango', description: 'Preparado al momento.', price: 10, category: 'jugos', image: img('jugos.jpg') },
-  { id: 'jugo-naranja', name: 'Jugo de Naranja', description: 'Preparado al momento.', price: 10, category: 'jugos', image: img('jugos.jpg') },
-  { id: 'jugo-surtido', name: 'Jugo Surtido', description: 'Preparado al momento.', price: 10, category: 'jugos', image: img('jugos.jpg') },
-  { id: 'jugo-maracumango', name: 'Maracumango', description: 'Maracuyá y mango.', price: 10, category: 'jugos', image: img('jugos.jpg') },
-  { id: 'jugo-especial', name: 'Jugo Especial', description: 'La combinación de la casa.', price: 12, category: 'jugos', image: img('jugos.jpg') },
+  { id: 'jugo-papaya', name: 'Jugo de Papaya', description: 'Preparado al momento.', price: 7, category: 'jugos', image: img('jugos', 'jugo-papaya.jpg') },
+  { id: 'jugo-pina', name: 'Jugo de Piña', description: 'Preparado al momento.', price: 7, category: 'jugos', image: img('jugos', 'jugo-piña.jpg') },
+  { id: 'jugo-fresa', name: 'Jugo de Fresa', description: 'Preparado al momento.', price: 8, category: 'jugos', image: img('jugos', 'juego-fresa.jpg') },
+  { id: 'jugo-mango', name: 'Jugo de Mango', description: 'Preparado al momento.', price: 10, category: 'jugos', image: img('jugos', 'jugo-mango.jpg') },
+  { id: 'jugo-naranja', name: 'Jugo de Naranja', description: 'Preparado al momento.', price: 10, category: 'jugos', image: img('jugos', 'jugo-naranja.jpg') },
+  { id: 'jugo-surtido', name: 'Jugo Surtido', description: 'Preparado al momento.', price: 10, category: 'jugos', image: img('jugos', 'jugo-surtido.jpg') },
+  { id: 'jugo-maracumango', name: 'Maracumango', description: 'Maracuyá y mango.', price: 10, category: 'jugos', image: img('jugos', 'maracumango.jpg') },
+  { id: 'jugo-especial', name: 'Jugo Especial', description: 'La combinación de la casa.', price: 12, category: 'jugos', image: img('jugos', 'jugo-especial.jpg') },
 
   /* ---------------- ANTOJITOS ---------------- */
   {
@@ -209,7 +233,7 @@ export const PRODUCTS: Product[] = [
     description: 'Pan de molde, jamón y queso edam.',
     price: 10,
     category: 'antojitos',
-    image: img('sandwich-misto.jpg'),
+    image: img('antojitos', 'sandwitch-mixto.jpg'),
   },
   {
     id: 'triples',
@@ -217,7 +241,7 @@ export const PRODUCTS: Product[] = [
     description: 'Clásico: pollo, durazno y palta.',
     price: 10,
     category: 'antojitos',
-    image: img('triples.jpg'),
+    image: img('antojitos', 'triples.jpg'),
   },
   {
     id: 'croissants',
@@ -225,7 +249,7 @@ export const PRODUCTS: Product[] = [
     description: 'Mixto (jamón-queso) o pollo (pollo, apio, pecanas, mayonesa).',
     price: 10,
     category: 'antojitos',
-    image: img('croisants.jpg'),
+    image: img('antojitos', 'croissants.jpg'),
   },
   {
     id: 'hamburguesa-carne',
@@ -233,7 +257,7 @@ export const PRODUCTS: Product[] = [
     description: 'Carne, lechuga, tomate y cremas.',
     price: 14,
     category: 'antojitos',
-    image: img('hamburguesa.jpg'),
+    image: img('antojitos', 'hamburguesa.jpg'),
     addon: { label: 'Agregar huevo o queso', price: 2 },
   },
   {
@@ -242,7 +266,7 @@ export const PRODUCTS: Product[] = [
     description: 'Pollo, lechuga, tomate y cremas.',
     price: 14,
     category: 'antojitos',
-    image: img('hamburguesa.jpg'),
+    image: img('antojitos', 'hamburguesa.jpg'),
     addon: { label: 'Agregar huevo o queso', price: 2 },
   },
   {
@@ -251,7 +275,7 @@ export const PRODUCTS: Product[] = [
     description: 'Carne y pollo.',
     price: 6,
     category: 'antojitos',
-    image: img('empanada.jpg'),
+    image: img('antojitos', 'empanada.jpg'),
   },
   {
     id: 'causa-rellena',
@@ -259,7 +283,7 @@ export const PRODUCTS: Product[] = [
     description: 'Pollo o atún.',
     price: 15,
     category: 'antojitos',
-    image: img('causa-rellena.jpg'),
+    image: img('antojitos', 'causa-rellena.jpg'),
   },
   {
     id: 'choripan',
@@ -267,59 +291,59 @@ export const PRODUCTS: Product[] = [
     description: 'Chorizo a la parrilla en pan.',
     price: 10,
     category: 'antojitos',
-    image: img('choripan.jpg'),
+    image: img('antojitos', 'choripan.jpg'),
   },
 
   /* ---------------- DULCES ---------------- */
-  { id: 'keke-platano', name: 'Keke de Plátano', description: 'Horneado en casa.', price: 6, category: 'dulces', image: img('keke-platano.jpg') },
-  { id: 'keke-naranja', name: 'Keke de Naranja', description: 'Horneado en casa.', price: 6, category: 'dulces', image: img('keke-naranja.jpg') },
+  { id: 'keke-platano', name: 'Keke de Plátano', description: 'Horneado en casa.', price: 6, category: 'dulces', image: img('dulces', 'keke-platano.jpg') },
+  { id: 'keke-naranja', name: 'Keke de Naranja', description: 'Horneado en casa.', price: 6, category: 'dulces', image: img('dulces', 'keke-naranja.jpg') },
   {
     id: 'pancakes-arandanos',
     name: 'Pancakes con Arándanos',
     description: 'Esponjosos, con arándanos frescos.',
     price: 12,
     category: 'dulces',
-    image: img('pancakes.jpg'),
+    image: img('dulces', 'pancakes-arandanos.jpg'),
     badge: 'Nuevo',
   },
 
   /* ---------------- INFUSIONES ---------------- */
-  { id: 'manzanilla-anis', name: 'Manzanilla / Anís', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones.jpg') },
-  { id: 'hierba-luisa', name: 'Hierba Luisa', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones.jpg') },
-  { id: 'te-negro-muna', name: 'Té Negro / Muña', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones.jpg') },
-  { id: 'te-verde', name: 'Té Verde', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones.jpg') },
+  { id: 'manzanilla-anis', name: 'Manzanilla / Anís', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones', 'manzanilla-anis.jpg') },
+  { id: 'hierba-luisa', name: 'Hierba Luisa', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones', 'hierba-luisa.jpg') },
+  { id: 'te-negro-muna', name: 'Té Negro / Muña', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones', 'te-negro-muña.jpg') },
+  { id: 'te-verde', name: 'Té Verde', description: 'Infusión caliente.', price: 3, category: 'infusiones', image: img('infusiones', 'te-verde.jpg') },
   {
     id: 'infusiones-miel',
     name: 'Infusiones con Miel',
     description: 'Cualquier infusión con miel natural.',
     price: 10,
     category: 'infusiones',
-    image: img('infusiones.jpg'),
+    image: img('infusiones', 'infusiones-miel.jpg'),
   },
 
   /* ---------------- CAFES ---------------- */
-  { id: 'espresso', name: 'Espresso', description: 'Café puro intenso.', price: 3, category: 'cafes', image: img('cafes.jpg') },
-  { id: 'americano', name: 'Americano', description: 'Espresso + agua caliente.', price: 7, category: 'cafes', image: img('cafes.jpg') },
-  { id: 'espresso-doble', name: 'Espresso Doble', description: 'Doble shot de café.', price: 8, category: 'cafes', image: img('cafes.jpg') },
-  { id: 'capuccino', name: 'Capuccino', description: 'Espresso, leche vaporizada y espuma.', price: 8, category: 'cafes', image: img('cafes.jpg') },
-  { id: 'latte', name: 'Latte', description: 'Espresso con abundante leche.', price: 9, category: 'cafes', image: img('cafes.jpg') },
-  { id: 'mocaccino', name: 'Mocaccino', description: 'Espresso, chocolate y leche.', price: 11, category: 'cafes', image: img('cafes.jpg') },
-  { id: 'chocolate-clasico', name: 'Chocolate', description: 'Chocolate caliente.', price: 10, category: 'cafes', image: img('cafes.jpg') },
+  { id: 'espresso', name: 'Espresso', description: 'Café puro intenso.', price: 3, category: 'cafes', image: img('cafes', 'espresso.jpg') },
+  { id: 'americano', name: 'Americano', description: 'Espresso + agua caliente.', price: 7, category: 'cafes', image: img('cafes', 'americano.jpg') },
+  { id: 'espresso-doble', name: 'Espresso Doble', description: 'Doble shot de café.', price: 8, category: 'cafes', image: img('cafes', 'espresso-doble.jpg') },
+  { id: 'capuccino', name: 'Capuccino', description: 'Espresso, leche vaporizada y espuma.', price: 8, category: 'cafes', image: img('cafes', 'capuccino.jpg') },
+  { id: 'latte', name: 'Latte', description: 'Espresso con abundante leche.', price: 9, category: 'cafes', image: img('cafes', 'latte.jpg') },
+  { id: 'mocaccino', name: 'Mocaccino', description: 'Espresso, chocolate y leche.', price: 11, category: 'cafes', image: img('cafes', 'mocaccino.jpg') },
+  { id: 'chocolate-clasico', name: 'Chocolate', description: 'Chocolate caliente.', price: 10, category: 'cafes', image: img('cafes', 'chocolate.jpg') },
   {
     id: 'chocolate-menta',
     name: 'Chocolate',
     description: 'Chocolate caliente con naranja y menta.',
     price: 12,
     category: 'cafes',
-    image: img('cafes.jpg'),
+    image: img('cafes', 'chocolate.jpg'),
   },
 
   /* ---------------- FRAPPES ---------------- */
-  { id: 'frappe-mocca', name: 'Frappé Mocca', description: 'Café, chocolate y hielo.', price: 13, category: 'frappes', image: img('frappes.jpg') },
-  { id: 'frappe-algarrobina', name: 'Frappé Algarrobina', description: 'Sabor tradicional con algarrobina.', price: 13, category: 'frappes', image: img('frappes.jpg') },
-  { id: 'frappe-nutella', name: 'Frappé Nutella', description: 'Con crema de avellanas.', price: 15, category: 'frappes', image: img('frappes.jpg') },
-  { id: 'frappe-clasica', name: 'Frappé Clásico', description: 'El favorito de la casa.', price: 13, category: 'frappes', image: img('frappes.jpg') },
-  { id: 'frappe-oreo', name: 'Frappé Oreo', description: 'Con galletas Oreo.', price: 15, category: 'frappes', image: img('frappes.jpg') },
+  { id: 'frappe-mocca', name: 'Frappé Mocca', description: 'Café, chocolate y hielo.', price: 13, category: 'frappes', image: img('frappes', 'frappe-mocca.jpeg') },
+  { id: 'frappe-algarrobina', name: 'Frappé Algarrobina', description: 'Sabor tradicional con algarrobina.', price: 13, category: 'frappes', image: img('frappes', 'frappe-algarrobina.jpg') },
+  { id: 'frappe-nutella', name: 'Frappé Nutella', description: 'Con crema de avellanas.', price: 15, category: 'frappes', image: img('frappes', 'frappe-nutella.jpg') },
+  { id: 'frappe-clasica', name: 'Frappé Clásico', description: 'El favorito de la casa.', price: 13, category: 'frappes', image: img('frappes', 'frappe-claisco.jpg') },
+  { id: 'frappe-oreo', name: 'Frappé Oreo', description: 'Con galletas Oreo.', price: 15, category: 'frappes', image: img('frappes', 'frappe-oreo.jpg') },
 
   /* ---------------- REFRESCANTES ---------------- */
   {
@@ -329,7 +353,7 @@ export const PRODUCTS: Product[] = [
     price: 8,
     category: 'refrescantes',
     unit: 'Vaso',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'liminada-clasica.jpg'),
   },
   {
     id: 'limonada-jarra',
@@ -338,7 +362,7 @@ export const PRODUCTS: Product[] = [
     price: 15,
     category: 'refrescantes',
     unit: 'Jarra',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'liminada-clasica.jpg'),
   },
   {
     id: 'frutos-rojos-vaso',
@@ -347,7 +371,7 @@ export const PRODUCTS: Product[] = [
     price: 10,
     category: 'refrescantes',
     unit: 'Vaso',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'frutos-rojos.jpg'),
   },
   {
     id: 'frutos-rojos-jarra',
@@ -356,7 +380,7 @@ export const PRODUCTS: Product[] = [
     price: 19,
     category: 'refrescantes',
     unit: 'Jarra',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'frutos-rojos.jpg'),
   },
   {
     id: 'jamaica-maracuya-vaso',
@@ -365,7 +389,7 @@ export const PRODUCTS: Product[] = [
     price: 10,
     category: 'refrescantes',
     unit: 'Vaso',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'jamaica-maracuya.jpg'),
   },
   {
     id: 'jamaica-maracuya-jarra',
@@ -374,7 +398,7 @@ export const PRODUCTS: Product[] = [
     price: 19,
     category: 'refrescantes',
     unit: 'Jarra',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'jamaica-maracuya.jpg'),
   },
   {
     id: 'limonada-fresa-vaso',
@@ -383,7 +407,7 @@ export const PRODUCTS: Product[] = [
     price: 9,
     category: 'refrescantes',
     unit: 'Vaso',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'limonada-fresa-arandano.jpg'),
   },
   {
     id: 'limonada-fresa-jarra',
@@ -392,7 +416,7 @@ export const PRODUCTS: Product[] = [
     price: 17,
     category: 'refrescantes',
     unit: 'Jarra',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'limonada-fresa-arandano.jpg'),
   },
   {
     id: 'maracuya-clasica-vaso',
@@ -401,7 +425,7 @@ export const PRODUCTS: Product[] = [
     price: 9,
     category: 'refrescantes',
     unit: 'Vaso',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'maracuya-clasica.jpg'),
   },
   {
     id: 'maracuya-clasica-jarra',
@@ -410,7 +434,7 @@ export const PRODUCTS: Product[] = [
     price: 18,
     category: 'refrescantes',
     unit: 'Jarra',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'maracuya-clasica.jpg'),
   },
   {
     id: 'maracuya-frozen-vaso',
@@ -419,7 +443,7 @@ export const PRODUCTS: Product[] = [
     price: 11,
     category: 'refrescantes',
     unit: 'Vaso',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'maracuya-frozen.jpg'),
   },
   {
     id: 'maracuya-frozen-jarra',
@@ -428,7 +452,7 @@ export const PRODUCTS: Product[] = [
     price: 20,
     category: 'refrescantes',
     unit: 'Jarra',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'maracuya-frozen.jpg'),
   },
   {
     id: 'sparkling-fresa-vaso',
@@ -437,7 +461,7 @@ export const PRODUCTS: Product[] = [
     price: 8,
     category: 'refrescantes',
     unit: 'Vaso',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'sparking-fresa-maracuya.jpg'),
   },
   {
     id: 'sparkling-fresa-jarra',
@@ -446,33 +470,33 @@ export const PRODUCTS: Product[] = [
     price: 15,
     category: 'refrescantes',
     unit: 'Jarra',
-    image: img('limonada.jpg'),
+    image: img('refrescantes', 'sparking-fresa-maracuya.jpg'),
   },
 
   /* ---------------- ICE COFFEE ---------------- */
-  { id: 'ice-caramel', name: 'Ice Caramel', description: 'Café helado con caramelo.', price: 14, category: 'icecoffee', image: img('ice-coffee.jpg') },
-  { id: 'ice-mocca', name: 'Ice Mocca', description: 'Café helado con chocolate.', price: 14, category: 'icecoffee', image: img('ice-coffee.jpg') },
-  { id: 'ice-capuccino', name: 'Ice Capuccino', description: 'Capuccino helado.', price: 12, category: 'icecoffee', image: img('ice-coffee.jpg') },
-  { id: 'ice-americano', name: 'Ice Americano', description: 'Americano helado.', price: 10, category: 'icecoffee', image: img('ice-coffee.jpg') },
-  { id: 'ice-latte', name: 'Ice Latte', description: 'Latte helado.', price: 12, category: 'icecoffee', image: img('ice-coffee.jpg') },
-  { id: 'ice-matcha', name: 'Ice Matcha', description: 'Té matcha helado.', price: 14, category: 'icecoffee', image: img('ice-coffee.jpg') },
+  { id: 'ice-caramel', name: 'Ice Caramel', description: 'Café helado con caramelo.', price: 14, category: 'icecoffee', image: img('ice-coffee', 'ice-caramel.jpg') },
+  { id: 'ice-mocca', name: 'Ice Mocca', description: 'Café helado con chocolate.', price: 14, category: 'icecoffee', image: img('ice-coffee', 'ice-mocca.jpg') },
+  { id: 'ice-capuccino', name: 'Ice Capuccino', description: 'Capuccino helado.', price: 12, category: 'icecoffee', image: img('ice-coffee', 'ice-capuccino.jpg') },
+  { id: 'ice-americano', name: 'Ice Americano', description: 'Americano helado.', price: 10, category: 'icecoffee', image: img('ice-coffee', 'ice-americano.jpg') },
+  { id: 'ice-latte', name: 'Ice Latte', description: 'Latte helado.', price: 12, category: 'icecoffee', image: img('ice-coffee', 'ice-latte.jpg') },
+  { id: 'ice-matcha', name: 'Ice Matcha', description: 'Té matcha helado.', price: 14, category: 'icecoffee', image: img('ice-coffee', 'ice-matcha.jpg') },
   {
     id: 'ice-latte-vainilla',
     name: 'Ice Latte Vainilla',
     description: 'Latte helado con vainilla.',
     price: 13,
     category: 'icecoffee',
-    image: img('ice-coffee.jpg'),
+    image: img('ice-coffee', 'ice-latte-vainilla.jpg'),
   },
 
   /* ---------------- CERVEZAS Y GASEOSAS ---------------- */
-  { id: 'pilsen', name: 'Pilsen', description: 'Cerveza clásica.', price: 7, category: 'cervezas', image: img('cervezas.jpg') },
-  { id: 'corona', name: 'Corona', description: 'Cerveza mexicana.', price: 10, category: 'cervezas', image: img('cervezas.jpg') },
-  { id: 'heineken', name: 'Heineken', description: 'Cerveza importada.', price: 10, category: 'cervezas', image: img('cervezas.jpg') },
-  { id: 'cusquena', name: 'Cusqueña', description: 'Cerveza cusqueña.', price: 10, category: 'cervezas', image: img('cervezas.jpg') },
-  { id: 'coca-cola', name: 'Coca Cola', description: 'Gaseosa 500 ml.', price: 3, category: 'cervezas', image: img('cervezas.jpg') },
-  { id: 'inca-kola', name: 'Inca Kola', description: 'Gaseosa 500 ml.', price: 3, category: 'cervezas', image: img('cervezas.jpg') },
-  { id: 'sprite', name: 'Sprite', description: 'Gaseosa 500 ml.', price: 3, category: 'cervezas', image: img('cervezas.jpg') },
+  { id: 'pilsen', name: 'Pilsen', description: 'Cerveza clásica.', price: 7, category: 'cervezas', image: img('cervezas-gaseosas', 'pilsen.jpg') },
+  { id: 'corona', name: 'Corona', description: 'Cerveza mexicana.', price: 10, category: 'cervezas', image: img('cervezas-gaseosas', 'corona.jpg') },
+  { id: 'heineken', name: 'Heineken', description: 'Cerveza importada.', price: 10, category: 'cervezas', image: img('cervezas-gaseosas', 'heineken.jpg') },
+  { id: 'cusquena', name: 'Cusqueña', description: 'Cerveza cusqueña.', price: 10, category: 'cervezas', image: img('cervezas-gaseosas', 'cusqueña.jpeg') },
+  { id: 'coca-cola', name: 'Coca Cola', description: 'Gaseosa 500 ml.', price: 3, category: 'cervezas', image: img('cervezas-gaseosas', 'coca-cola.jpeg') },
+  { id: 'inca-kola', name: 'Inca Kola', description: 'Gaseosa 500 ml.', price: 3, category: 'cervezas', image: img('cervezas-gaseosas', 'inka-kola.jpg') },
+  { id: 'sprite', name: 'Sprite', description: 'Gaseosa 500 ml.', price: 3, category: 'cervezas', image: img('cervezas-gaseosas', 'sprite.jpg') },
 
   /* ---------------- BEBIDAS HOT ---------------- */
   {
@@ -481,7 +505,7 @@ export const PRODUCTS: Product[] = [
     description: 'Naranja + té negro.',
     price: 17,
     category: 'bebidas-hot',
-    image: img('calientitos.jpg'),
+    image: img('bebidas-hot', 'calientito1.jpg'),
   },
   {
     id: 'calientito-2',
@@ -489,7 +513,7 @@ export const PRODUCTS: Product[] = [
     description: 'Maracuyá y muña.',
     price: 17,
     category: 'bebidas-hot',
-    image: img('calientitos.jpg'),
+    image: img('bebidas-hot', 'calientito2.jpg'),
   },
   {
     id: 'calientito-3',
@@ -497,34 +521,12 @@ export const PRODUCTS: Product[] = [
     description: 'Jengibre, limón y té negro.',
     price: 17,
     category: 'bebidas-hot',
-    image: img('calientitos.jpg'),
-  },
-
-  /* ---------------- HAPPY HOUR ---------------- */
-  {
-    id: 'happy-hour-semana',
-    name: 'Happy Hour',
-    description: 'Lunes a jueves · Solo cocteles clásicos.',
-    price: 30,
-    category: 'happy-hour',
-    unit: 'Tábano',
-    image: img('cocteles.jpg'),
-    badge: '2x1',
-  },
-  {
-    id: 'happy-hour-fin',
-    name: 'Happy Hour',
-    description: 'Viernes y sábado · Solo cocteles clásicos.',
-    price: 35,
-    category: 'happy-hour',
-    unit: 'Tábano',
-    image: img('cocteles.jpg'),
-    badge: '2x1',
+    image: img('bebidas-hot', 'calientito3.jpg'),
   },
 
   /* ---------------- SHOTS ---------------- */
-  { id: 'shot-tequila', name: 'Shot de Tequila', description: 'Servido con sal y limón.', price: 15, category: 'shots', image: img('shots.jpg') },
-  { id: 'shot-pisco', name: 'Shot de Pisco', description: 'Pisco puro.', price: 15, category: 'shots', image: img('shots.jpg') },
+  { id: 'shot-tequila', name: 'Shot de Tequila', description: 'Servido con sal y limón.', price: 15, category: 'shots', image: img('shot', 'tequila.jpg') },
+  { id: 'shot-pisco', name: 'Shot de Pisco', description: 'Pisco puro.', price: 15, category: 'shots', image: img('shot', 'pisco.jpg') },
 
   /* ---------------- COCTELERIA CLASICA ---------------- */
   {
@@ -533,7 +535,7 @@ export const PRODUCTS: Product[] = [
     description: 'Maracuyá · fresa · clásica.',
     price: 20,
     category: 'cocteles-clasicos',
-    image: img('cocteles.jpg'),
+    image: img('cocteles', 'pisco-sour.jpg'),
   },
   {
     id: 'mojitos',
@@ -541,7 +543,7 @@ export const PRODUCTS: Product[] = [
     description: 'Frutos rojos · maracuyá · clásica.',
     price: 20,
     category: 'cocteles-clasicos',
-    image: img('cocteles.jpg'),
+    image: img('cocteles', 'mojitos.jpg'),
   },
   {
     id: 'chilcanos',
@@ -549,7 +551,7 @@ export const PRODUCTS: Product[] = [
     description: 'Maracuyá · hierba luisa · clásica.',
     price: 20,
     category: 'cocteles-clasicos',
-    image: img('cocteles.jpg'),
+    image: img('cocteles', 'chilcanos.jpg'),
   },
   {
     id: 'tequila-sunrise',
@@ -557,7 +559,7 @@ export const PRODUCTS: Product[] = [
     description: 'Tequila, naranja y granadina.',
     price: 25,
     category: 'cocteles-clasicos',
-    image: img('cocteles.jpg'),
+    image: img('cocteles', 'tequila-sunrise.jpg'),
   },
   {
     id: 'pina-colada',
@@ -565,7 +567,7 @@ export const PRODUCTS: Product[] = [
     description: 'Piña, coco y ron.',
     price: 25,
     category: 'cocteles-clasicos',
-    image: img('cocteles.jpg'),
+    image: img('cocteles', 'piña-colada.jpg'),
   },
   {
     id: 'daiquiri',
@@ -573,18 +575,18 @@ export const PRODUCTS: Product[] = [
     description: 'Fresa · mango · durazno.',
     price: 20,
     category: 'cocteles-clasicos',
-    image: img('cocteles.jpg'),
+    image: img('cocteles', 'daiquiri.jpg'),
   },
 
   /* ---------------- COCTELERIA CAFE ---------------- */
-  { id: 'espresso-martini', name: 'Espresso Martini', description: 'Espresso y vodka.', price: 22, category: 'cocteles-cafe', image: img('cocteles.jpg') },
-  { id: 'coffee-tonic', name: 'Coffee Tonic', description: 'Café y tónica.', price: 20, category: 'cocteles-cafe', image: img('cocteles.jpg') },
-  { id: 'coffee-sour', name: 'Coffee Sour', description: 'Café ácido con toques cítricos.', price: 18, category: 'cocteles-cafe', image: img('cocteles.jpg') },
-  { id: 'irish-coffee', name: 'Irish Coffee', description: 'Café, whiskey e irlandesa.', price: 17, category: 'cocteles-cafe', image: img('cocteles.jpg') },
+  { id: 'espresso-martini', name: 'Espresso Martini', description: 'Espresso y vodka.', price: 22, category: 'cocteles-cafe', image: img('coteleria-cafe', 'espresso-martini.jpg') },
+  { id: 'coffee-tonic', name: 'Coffee Tonic', description: 'Café y tónica.', price: 20, category: 'cocteles-cafe', image: img('coteleria-cafe', 'coffe-tonic.jpg') },
+  { id: 'coffee-sour', name: 'Coffee Sour', description: 'Café ácido con toques cítricos.', price: 18, category: 'cocteles-cafe', image: img('coteleria-cafe', 'coffe-sour.jpg') },
+  { id: 'irish-coffee', name: 'Irish Coffee', description: 'Café, whiskey e irlandesa.', price: 17, category: 'cocteles-cafe', image: img('coteleria-cafe', 'irish-coffe.jpg') },
 
   /* ---------------- COCTELES DE TENDENCIA ---------------- */
-  { id: 'machu-picchu', name: 'Machu Picchu', description: 'Coctel de autor.', price: 28, category: 'tendencia', image: img('cocteles.jpg') },
-  { id: 'sacsayhuaman', name: 'Sacsayhuaman', description: 'Coctel de autor.', price: 28, category: 'tendencia', image: img('cocteles.jpg') },
-  { id: 'aperol-spritz', name: 'Aperol Spritz', description: 'Aperol, prosecco y soda.', price: 30, category: 'tendencia', image: img('cocteles.jpg') },
-  { id: 'blue-hawaii', name: 'Blue Hawaii', description: 'Coctel tropical azul.', price: 28, category: 'tendencia', image: img('cocteles.jpg') },
+  { id: 'machu-picchu', name: 'Machu Picchu', description: 'Coctel de autor.', price: 28, category: 'tendencia', image: img('cocteles-tendencia', 'machu-picchu.jpg') },
+  { id: 'sacsayhuaman', name: 'Sacsayhuaman', description: 'Coctel de autor.', price: 28, category: 'tendencia', image: img('cocteles-tendencia', 'sacsayhuaman.jpg') },
+  { id: 'aperol-spritz', name: 'Aperol Spritz', description: 'Aperol, prosecco y soda.', price: 30, category: 'tendencia', image: img('cocteles-tendencia', 'aperol-spritz.jpg') },
+  { id: 'blue-hawaii', name: 'Blue Hawaii', description: 'Coctel tropical azul.', price: 28, category: 'tendencia', image: img('cocteles-tendencia', 'blue-hawaii.jpg') },
 ];

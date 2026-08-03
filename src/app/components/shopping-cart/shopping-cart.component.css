@@ -1,99 +1,96 @@
 .cart-page {
-  padding: 26px 0 80px;
+  padding: 20px 0 70px;
 }
 
 .page-head {
-  margin-bottom: 26px;
+  margin-bottom: 20px;
 }
 
 .back-link {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: var(--azul-700);
-  margin-bottom: 12px;
-  transition: color 0.2s ease;
-}
-
-.back-link:hover {
-  color: var(--azul-500);
+  margin-bottom: 8px;
 }
 
 .page-title {
   font-family: var(--fuente-bra);
-  font-size: clamp(1.7rem, 3.5vw, 2.3rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 800;
   color: var(--cafe-900);
 }
 
 .page-sub {
   color: var(--gris-texto);
-  margin-top: 4px;
+  margin-top: 2px;
+  font-size: 0.9rem;
 }
 
 /* ---------------- Estado vacío ---------------- */
 .empty-state {
   text-align: center;
-  padding: 70px 24px;
+  padding: 50px 20px;
   background: var(--blanco);
-  border-radius: var(--radio);
+  border-radius: var(--radio-sm);
   box-shadow: var(--sombra-card);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 .empty-icon {
-  width: 110px;
-  height: 110px;
+  width: 80px;
+  height: 80px;
   border-radius: 50%;
   display: grid;
   place-items: center;
   color: var(--cafe-300);
   background: var(--crema);
-  margin-bottom: 8px;
+  margin-bottom: 4px;
 }
 
 .empty-title {
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 700;
   color: var(--cafe-800);
 }
 
 .empty-state .muted {
-  margin-bottom: 14px;
+  margin-bottom: 10px;
+  font-size: 0.9rem;
 }
 
 /* ---------------- Layout ---------------- */
 .cart-layout {
   display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 24px;
+  grid-template-columns: 1fr 300px;
+  gap: 20px;
   align-items: start;
 }
 
 .cart-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .cart-item {
   display: flex;
-  gap: 14px;
+  gap: 12px;
   background: var(--blanco);
-  border-radius: var(--radio);
-  padding: 12px;
+  border-radius: var(--radio-sm);
+  padding: 10px;
   box-shadow: var(--sombra-card);
   border: 1px solid rgba(43, 27, 18, 0.06);
 }
 
 .cart-item-media {
-  width: 92px;
-  height: 92px;
+  width: 72px;
+  height: 72px;
   border-radius: var(--radio-sm);
   overflow: hidden;
   flex-shrink: 0;
@@ -112,60 +109,54 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 8px;
+  gap: 6px;
 }
 
 .cart-item-top {
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 .cart-item-name {
-  font-size: 1.02rem;
+  font-size: 0.88rem;
   font-weight: 700;
   color: var(--cafe-900);
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .cart-item-unit {
   display: inline-block;
-  margin-top: 4px;
-  padding: 2px 10px;
+  margin-top: 2px;
+  padding: 1px 8px;
   border-radius: 999px;
   background: var(--azul-700);
   color: #eaf1fc;
-  font-size: 0.7rem;
+  font-size: 0.6rem;
   font-weight: 700;
   text-transform: uppercase;
 }
 
 .cart-item-addon {
-  margin-top: 4px;
-  font-size: 0.8rem;
+  margin-top: 2px;
+  font-size: 0.7rem;
   color: var(--azul-700);
   font-weight: 600;
 }
 
 .remove-btn {
   color: var(--gris-texto);
-  padding: 6px;
-  border-radius: 8px;
-  transition: color 0.2s ease, background 0.2s ease;
-  touch-action: manipulation;
-}
-
-.remove-btn:hover {
-  color: var(--rojo);
-  background: rgba(192, 57, 43, 0.08);
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
 }
 
 .cart-item-bottom {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
+  gap: 8px;
 }
 
 .stepper {
@@ -174,25 +165,20 @@
   gap: 2px;
   background: var(--cafe-100);
   border-radius: 999px;
-  padding: 3px;
+  padding: 2px;
 }
 
 .step-btn {
-  width: 32px;
-  height: 32px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 1.15rem;
+  font-size: 1rem;
   font-weight: 700;
   background: var(--cafe-700);
   color: var(--crema);
-  transition: background 0.2s ease, transform 0.12s ease;
-  touch-action: manipulation;
-}
-
-.step-btn:hover {
-  background: var(--cafe-900);
+  cursor: pointer;
 }
 
 .step-btn:active {
@@ -200,16 +186,16 @@
 }
 
 .step-qty {
-  min-width: 30px;
+  min-width: 26px;
   text-align: center;
   font-weight: 700;
-  font-size: 1.02rem;
+  font-size: 0.9rem;
   color: var(--cafe-900);
 }
 
 .cart-item-price {
   font-weight: 800;
-  font-size: 1.12rem;
+  font-size: 0.95rem;
   color: var(--cafe-700);
   white-space: nowrap;
 }
@@ -219,25 +205,26 @@
   position: sticky;
   top: 96px;
   background: var(--blanco);
-  border-radius: var(--radio);
-  padding: 22px;
+  border-radius: var(--radio-sm);
+  padding: 18px 20px;
   box-shadow: var(--sombra-card);
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
 .summary-title {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: var(--cafe-900);
+  margin-bottom: 2px;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
   gap: 10px;
-  font-size: 0.95rem;
+  font-size: 0.88rem;
   color: var(--gris-texto);
 }
 
@@ -247,19 +234,19 @@
   align-items: baseline;
   gap: 10px;
   border-top: 2px dashed var(--cafe-200);
-  padding-top: 14px;
-  font-size: 1.2rem;
+  padding-top: 10px;
+  font-size: 1.05rem;
   font-weight: 800;
   color: var(--cafe-900);
 }
 
 .summary-total span:last-child {
-  font-size: 1.5rem;
+  font-size: 1.3rem;
   color: var(--cafe-700);
 }
 
 .summary .btn {
-  margin-top: 4px;
+  margin-top: 2px;
 }
 
 /* ---------------- Responsive ---------------- */
@@ -274,14 +261,40 @@
 
 @media (max-width: 520px) {
   .cart-page {
-    padding: 20px 0 70px;
+    padding: 16px 0 60px;
   }
   .cart-item-media {
-    width: 74px;
-    height: 74px;
+    width: 60px;
+    height: 60px;
+  }
+  .cart-item {
+    padding: 8px;
+    gap: 10px;
+  }
+  .cart-item-name {
+    font-size: 0.8rem;
+  }
+  .cart-item-price {
+    font-size: 0.85rem;
   }
   .cart-item-bottom {
     flex-direction: column;
     align-items: flex-start;
+    gap: 4px;
+  }
+  .step-btn {
+    width: 24px;
+    height: 24px;
+    font-size: 0.85rem;
+  }
+  .step-qty {
+    min-width: 22px;
+    font-size: 0.8rem;
+  }
+  .summary {
+    padding: 14px 16px;
+  }
+  .summary-total span:last-child {
+    font-size: 1.1rem;
   }
 }
