@@ -1,0 +1,108 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "newProjectRoot": "projects",
+  "projects": {
+    "yrelis-coffeebar-frontend": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "css",
+          "skipTests": true,
+          "standalone": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
+        }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:application",
+          "options": {
+            "outputPath": "dist/yrelis-coffeebar-frontend",
+            "index": "src/index.html",
+            "browser": "src/main.ts",
+            "polyfills": ["zone.js"],
+            "tsConfig": "tsconfig.app.json",
+            "assets": [
+              {
+                "glob": "**/*",
+                "input": "src/assets",
+                "output": "assets"
+              },
+              {
+                "glob": "favicon.svg",
+                "input": "src",
+                "output": "/"
+              }
+            ],
+            "styles": ["src/styles.css"],
+            "scripts": [],
+            "budgets": [
+              {
+                "type": "initial",
+                "maximumWarning": "1MB",
+                "maximumError": "3MB"
+              },
+              {
+                "type": "anyComponentStyle",
+                "maximumWarning": "16kB",
+                "maximumError": "32kB"
+              }
+            ],
+            "outputHashing": "all"
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2MB",
+                  "maximumError": "4MB"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "16kB",
+                  "maximumError": "32kB"
+                }
+              ],
+              "outputHashing": "all",
+              "optimization": true,
+              "sourceMap": false,
+              "namedChunks": false,
+              "extractLicenses": true
+            },
+            "development": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "namedChunks": true
+            }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "configurations": {
+            "production": {
+              "buildTarget": "yrelis-coffeebar-frontend:build:production"
+            },
+            "development": {
+              "buildTarget": "yrelis-coffeebar-frontend:build:development"
+            }
+          },
+          "defaultConfiguration": "development"
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n"
+        }
+      }
+    }
+  },
+  "cli": {
+    "analytics": "d92c85cb-6341-4fcb-8b9d-30298ef83d1d"
+  }
+}

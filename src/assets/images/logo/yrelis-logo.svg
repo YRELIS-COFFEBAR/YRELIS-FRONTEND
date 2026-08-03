@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
+<defs>
+<linearGradient id="lp" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#3b2415"/>
+<stop offset="1" stop-color="#122c5e"/>
+</linearGradient>
+<linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+<stop offset="0" stop-color="#ddb842"/>
+<stop offset="1" stop-color="#c9a227"/>
+</linearGradient>
+</defs>
+<rect x="1" y="1" width="478" height="178" rx="26" fill="url(#lp)" stroke="#ddb842" stroke-opacity="0.45" stroke-width="2"/>
+<circle cx="88" cy="90" r="58" fill="url(#lg)"/>
+<circle cx="88" cy="90" r="58" fill="none" stroke="#ffffff" stroke-opacity="0.6" stroke-width="2"/>
+<text x="88" y="90" text-anchor="middle" dominant-baseline="central" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="56" fill="#2b1b12">Y</text>
+<text x="168" y="58" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" font-size="44" fill="#ddb842">Yrelis</text>
+<text x="171" y="102" font-family="Poppins, 'Segoe UI', Arial, sans-serif" font-weight="bold" font-size="23" letter-spacing="2" fill="#f6efe4">COFFEEBAR</text>
+<rect x="40" y="140" width="30" height="16" rx="3" fill="#f6efe4" opacity="0.8"/>
+<path d="M 72 146 a 10 10 0 0 0 10 -10" fill="none" stroke="#f6efe4" stroke-opacity="0.8" stroke-width="3" stroke-linecap="round"/>
+<line x1="52" y1="132" x2="50" y2="122" stroke="#f6efe4" stroke-opacity="0.8" stroke-width="2.5" stroke-linecap="round"/>
+<line x1="60" y1="132" x2="62" y2="122" stroke="#f6efe4" stroke-opacity="0.8" stroke-width="2.5" stroke-linecap="round"/>
+</svg>

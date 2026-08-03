@@ -1,0 +1,151 @@
+<section class="menu-page">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="container hero-inner">
+      <div class="hero-copy">
+        <p class="hero-eyebrow">Bienvenido a</p>
+        <h1 class="hero-title">Yrelis CoffeeBar</h1>
+        <p class="hero-sub">
+          Elige tus favoritos, arma tu pedido y paga con Yape, Plin o tarjeta.
+        </p>
+      </div>
+
+      <div class="hero-search">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="11" cy="11" r="8"></circle>
+          <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        </svg>
+        <input
+          type="search"
+          placeholder="Buscar en el menú..."
+          [value]="searchTerm()"
+          (input)="onSearch($event)"
+          aria-label="Buscar producto"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="container menu-body">
+    <!-- Barra de categorías -->
+    <nav class="category-bar" aria-label="Categorías">
+      <button
+        type="button"
+        class="chip"
+        [class.active]="selectedCategory() === 'all'"
+        (click)="selectCategory('all')"
+      >
+        Todos
+      </button>
+      @for (category of categories; track category.id) {
+        <button
+          type="button"
+          class="chip"
+          [class.active]="selectedCategory() === category.id"
+          (click)="selectCategory(category.id)"
+        >
+          {{ category.name }}
+        </button>
+      }
+    </nav>
+
+    <!-- Sección de productos -->
+    <section class="product-section">
+      <header class="section-head">
+        <h2 class="section-title">{{ sectionTitle() }}</h2>
+        <span class="section-count">{{ visibleProducts().length }} productos</span>
+      </header>
+
+      @if (visibleProducts().length === 0) {
+        <div class="empty-state">
+          <p class="empty-title">Sin resultados</p>
+          <p class="muted">No encontramos productos con ese nombre. Intenta con otra búsqueda.</p>
+          <button type="button" class="btn btn-outline" (click)="searchTerm.set('')">
+            Ver todo el menú
+          </button>
+        </div>
+      } @else {
+        <div class="product-grid">
+          @for (product of visibleProducts(); track product.id) {
+            <article class="product-card">
+              <div class="product-media">
+                <img
+                  [src]="product.image"
+                  [alt]="product.name"
+                  loading="lazy"
+                  (error)="onImageError($event)"
+                />
+                @if (product.badge) {
+                  <span class="badge">{{ product.badge }}</span>
+                }
+                @if (product.unit) {
+                  <span class="unit">{{ product.unit }}</span>
+                }
+              </div>
+
+              <div class="product-body">
+                <h3 class="product-name">{{ product.name }}</h3>
+                <p class="product-desc">{{ product.description }}</p>
+
+                @if (product.addon) {
+                  <p class="product-addon">
+                    + {{ product.addon.label }} (+S/ {{ product.addon.price.toFixed(2) }})
+                  </p>
+                }
+
+                <div class="product-foot">
+                  <span class="product-price">{{ formatPrice(product.price) }}</span>
+
+                  @if (quantityOf(product.id) === 0) {
+                    <button
+                      type="button"
+                      class="add-btn"
+                      (click)="order.add(product)"
+                      aria-label="Agregar {{ product.name }}"
+                    >
+                      Agregar
+                      <span class="add-plus">+</span>
+                    </button>
+                  } @else {
+                    <div class="stepper">
+                      <button
+                        type="button"
+                        class="step-btn"
+                        (click)="order.decrement(product.id)"
+                        aria-label="Quitar uno"
+                      >
+                        &minus;
+                      </button>
+                      <span class="step-qty">{{ quantityOf(product.id) }}</span>
+                      <button
+                        type="button"
+                        class="step-btn"
+                        (click)="order.increment(product.id)"
+                        aria-label="Agregar uno"
+                      >
+                        +
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+            </article>
+          }
+        </div>
+      }
+    </section>
+  </div>
+</section>
+
+<!-- Barra flotante de pedido -->
+@if (order.count() > 0) {
+  <div class="cart-bar">
+    <div class="container cart-bar-inner">
+      <div class="cart-bar-info">
+        <span class="cart-bar-count">{{ order.count() }} item(s) en tu pedido</span>
+        <span class="cart-bar-total">{{ formatPrice(order.subtotal()) }}</span>
+      </div>
+      <a routerLink="/carrito" class="btn btn-gold">Ver mi pedido</a>
+    </div>
+  </div>
+}

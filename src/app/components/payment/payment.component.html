@@ -1,0 +1,227 @@
+<section class="pay-page">
+  <div class="container">
+
+    @if (order.isEmpty() && step() !== 'success') {
+      <!-- Sin productos -->
+      <div class="empty-state animate-fade-up">
+        <div class="empty-icon">
+          <svg viewBox="0 0 24 24" width="54" height="54" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="1" y="4" width="22" height="16" rx="2"></rect>
+            <line x1="1" y1="10" x2="23" y2="10"></line>
+          </svg>
+        </div>
+        <h2 class="empty-title">No tienes un pedido por pagar</h2>
+        <p class="muted">Primero agrega productos a tu pedido desde el menú.</p>
+        <button type="button" class="btn btn-primary btn-lg" (click)="newOrder()">Ir al menú</button>
+      </div>
+    }
+
+    @if (!order.isEmpty() && step() === 'method') {
+      <!-- PASO 1: Datos y método de pago -->
+      <div class="pay-layout animate-fade-up">
+        <div class="pay-main">
+          <a routerLink="/carrito" class="back-link">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="19" y1="12" x2="5" y2="12"></line>
+              <polyline points="12 19 5 12 12 5"></polyline>
+            </svg>
+            Volver al carrito
+          </a>
+
+          <h1 class="page-title">¿Cómo quieres pagar?</h1>
+          <p class="page-sub">Elige tu método de pago favorito.</p>
+
+          <div class="field name-field">
+            <label for="customer-name">Nombre del cliente (opcional)</label>
+            <input
+              id="customer-name"
+              type="text"
+              placeholder="Ej: María"
+              [value]="customerName()"
+              (input)="onNameChange($event)"
+              autocomplete="off"
+            />
+          </div>
+
+          <div class="method-grid">
+            <!-- Yape -->
+            <button
+              type="button"
+              class="method-card"
+              [class.selected]="paymentMethod() === 'yape'"
+              (click)="selectMethod('yape')"
+            >
+              <span class="method-icon yape">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 11.5a8.38 8.38 0 0 1-8.5 8.5c-1.4 0-2.7-.3-3.9-.9L3 21l1.9-5.6a8.5 8.5 0 1 1 16.1-3.9Z"></path>
+                  <path d="M8.5 11.5h.01M12 11.5h.01M15.5 11.5h.01"></path>
+                </svg>
+              </span>
+              <span class="method-name">Yape</span>
+              <span class="method-desc">Escanea el código QR</span>
+            </button>
+
+            <!-- Plin -->
+            <button
+              type="button"
+              class="method-card"
+              [class.selected]="paymentMethod() === 'plin'"
+              (click)="selectMethod('plin')"
+            >
+              <span class="method-icon plin">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9"></circle>
+                  <path d="M9 8.5c0-1.5 1.2-2.5 3-2.5s3 1 3 2.6c0 2.4-6 1.2-6 5.2 0 1.4 1.2 2.2 3 2.2s3-.8 3-2.2"></path>
+                </svg>
+              </span>
+              <span class="method-name">Plin</span>
+              <span class="method-desc">Escanea el código QR</span>
+            </button>
+
+            <!-- Visa -->
+            <button
+              type="button"
+              class="method-card"
+              [class.selected]="paymentMethod() === 'visa'"
+              (click)="selectMethod('visa')"
+            >
+              <span class="method-icon visa">
+                <svg viewBox="0 0 24 24" width="30" height="30" fill="none" aria-hidden="true">
+                  <rect x="1.5" y="5" width="21" height="14" rx="2.5" fill="#0d3b8f" />
+                  <text x="12" y="16.5" text-anchor="middle" font-family="Poppins, sans-serif" font-size="7.5" font-style="italic" font-weight="700" fill="#fff" letter-spacing="1">VISA</text>
+                </svg>
+              </span>
+              <span class="method-name">Tarjeta Visa</span>
+              <span class="method-desc">Acerca la tarjeta al POS</span>
+            </button>
+          </div>
+
+          <div class="pay-actions">
+            <button
+              type="button"
+              class="btn btn-gold btn-lg btn-block"
+              (click)="confirmPayment()"
+            >
+              Pagar {{ formatPrice(order.subtotal()) }}
+            </button>
+          </div>
+        </div>
+
+        <!-- Resumen lateral -->
+        <aside class="summary">
+          <h2 class="summary-title">Resumen del pedido</h2>
+          <div class="summary-items">
+            @for (item of order.items(); track item.product.id) {
+              <div class="summary-item">
+                <span class="summary-qty">{{ item.quantity }}×</span>
+                <span class="summary-name">{{ item.product.name }}</span>
+                <span class="summary-price">{{ formatPrice(item.product.price * item.quantity) }}</span>
+              </div>
+            }
+          </div>
+          <div class="summary-total">
+            <span>Total a pagar</span>
+            <span>{{ formatPrice(order.subtotal()) }}</span>
+          </div>
+        </aside>
+      </div>
+    }
+
+    @if (step() === 'paying') {
+      <!-- PASO 2: Procesando pago -->
+      <div class="paying animate-fade-up">
+        @if (paymentMethod() === 'visa') {
+          <div class="pos-box">
+            <div class="nfc-rings">
+              <span class="ring r1"></span>
+              <span class="ring r2"></span>
+              <span class="ring r3"></span>
+              <div class="pos-screen">
+                <svg viewBox="0 0 40 26" width="52" height="34" fill="none" stroke="#0d3b8f" stroke-width="1.6" stroke-linecap="round" aria-hidden="true">
+                  <path d="M5 15c5-9 12-10 18-4 2 2 3 4 4 5h-9"></path>
+                  <path d="M13 15h-6c2 2 4 2 6 0Z"></path>
+                </svg>
+                <span class="pos-amount">{{ formatPrice(order.subtotal()) }}</span>
+                <span class="pos-status">Aprobado</span>
+              </div>
+            </div>
+            <h2 class="paying-title">Acerca la tarjeta al terminal</h2>
+            <p class="paying-sub">
+              Sostén tu tarjeta Visa frente al POS Izipay hasta escuchar el sonido de confirmación.
+            </p>
+            <div class="spinner-row">
+              <span class="spinner"></span>
+              <span>Esperando al terminal Izipay...</span>
+            </div>
+          </div>
+        } @else {
+          <div class="qr-box">
+            <div class="qr-frame">
+              <img
+                [src]="paymentMethod() === 'yape' ? 'assets/images/payments/qr-yape.png' : 'assets/images/payments/qr-plin.png'"
+                [alt]="paymentLabel(paymentMethod()) + ' QR'"
+                (error)="onQrError($event)"
+              />
+              <span class="qr-brand">{{ paymentLabel(paymentMethod()) }}</span>
+            </div>
+            <h2 class="paying-title">
+              Escanea el código con tu app de {{ paymentLabel(paymentMethod()) }}
+            </h2>
+            <p class="paying-sub">
+              Abre {{ paymentLabel(paymentMethod()) }} en tu celular, escanea el QR y confirma el pago de
+              <strong>{{ formatPrice(order.subtotal()) }}</strong>.
+            </p>
+            <div class="spinner-row">
+              <span class="spinner"></span>
+              <span>Esperando confirmación del pago...</span>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    @if (step() === 'success') {
+      <!-- PASO 3: Confirmación -->
+      @if (orderInfo(); as info) {
+        <div class="success animate-fade-up">
+          <div class="checkmark">
+            <svg viewBox="0 0 52 52" width="92" height="92" aria-hidden="true">
+              <circle class="check-circle" cx="26" cy="26" r="24" fill="none" />
+              <path class="check-path" fill="none" d="M14 27l8 8 16-16" />
+            </svg>
+          </div>
+
+          <p class="success-eyebrow">Pago confirmado</p>
+          <h1 class="success-title">¡Gracias, {{ info.customerName }}!</h1>
+          <p class="success-sub">Tu pedido fue registrado correctamente.</p>
+
+          <div class="success-ticket">
+            <div class="ticket-head">
+              <span>Pedido N° {{ info.orderNumber }}</span>
+              <span>{{ formatPrice(info.total) }}</span>
+            </div>
+            <div class="ticket-items">
+              @for (item of info.items; track item.product.id) {
+                <div class="ticket-item">
+                  <span>{{ item.quantity }}× {{ item.product.name }}</span>
+                  <span>{{ formatPrice(item.product.price * item.quantity) }}</span>
+                </div>
+              }
+            </div>
+            <div class="ticket-foot">
+              <span>Pago con {{ paymentLabel(info.paymentMethod) }}</span>
+              <span>{{ info.createdAt | date: 'HH:mm' }}</span>
+            </div>
+          </div>
+
+          <p class="success-note">La mesera ya recibió tu pedido. ¡Buen provecho!</p>
+
+          <button type="button" class="btn btn-primary btn-lg" (click)="newOrder()">
+            Hacer un nuevo pedido
+          </button>
+        </div>
+      }
+    }
+
+  </div>
+</section>
