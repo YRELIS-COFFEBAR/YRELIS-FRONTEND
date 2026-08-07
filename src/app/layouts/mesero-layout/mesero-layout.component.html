@@ -1,0 +1,170 @@
+<div class="mesero-layout">
+  <!-- CABECERA -->
+  <header class="mesero-header">
+    <div class="header-left">
+      <h1>👨‍🍳 Panel del Mesero</h1>
+      <span class="subtitle">Gestión de pedidos en tiempo real</span>
+    </div>
+    
+    <div class="header-right">
+      <button class="btn-refresh" (click)="refrescar()" [disabled]="isLoading()">
+        🔄 {{ isLoading() ? 'Cargando...' : 'Refrescar' }}
+      </button>
+    </div>
+  </header>
+
+  <!-- ESTADÍSTICAS -->
+  <section class="stats-grid">
+    <div class="stat-card">
+      <span class="stat-icon">📦</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().totalPedidos }}</span>
+        <span class="stat-label">Pedidos activos</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">💰</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ formatPrice(stats().totalVentas) }}</span>
+        <span class="stat-label">Ventas del día</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">⏳</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().pedidosPendientes }}</span>
+        <span class="stat-label">Pendientes</span>
+      </div>
+    </div>
+    <div class="stat-card">
+      <span class="stat-icon">🪑</span>
+      <div class="stat-info">
+        <span class="stat-value">{{ stats().mesasActivas }}</span>
+        <span class="stat-label">Mesas activas</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FILTROS -->
+  <div class="filtros">
+    <button 
+      class="filtro-btn" 
+      [class.active]="filtroEstado() === 'all'"
+      (click)="cambiarFiltro('all')"
+    >
+      Todos ({{ totalPedidos() }})
+    </button>
+    <button 
+      class="filtro-btn" 
+      [class.active]="filtroEstado() === 'PENDING'"
+      (click)="cambiarFiltro('PENDING')"
+    >
+      ⏳ Pendientes ({{ pendientesCount() }})
+    </button>
+    <button 
+      class="filtro-btn" 
+      [class.active]="filtroEstado() === 'PREPARING'"
+      (click)="cambiarFiltro('PREPARING')"
+    >
+      👨‍🍳 Preparando ({{ preparandoCount() }})
+    </button>
+    <button 
+      class="filtro-btn" 
+      [class.active]="filtroEstado() === 'READY'"
+      (click)="cambiarFiltro('READY')"
+    >
+      🍽️ Listos ({{ listosCount() }})
+    </button>
+  </div>
+
+  <!-- LISTA DE PEDIDOS -->
+  <main class="mesero-main">
+    @if (isLoading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando pedidos...</p>
+      </div>
+    } @else if (errorMessage()) {
+      <div class="error-state">
+        <span class="error-icon">⚠️</span>
+        <p>{{ errorMessage() }}</p>
+        <button (click)="refrescar()">Intentar de nuevo</button>
+      </div>
+    } @else if (pedidosFiltrados().length === 0) {
+      <div class="empty-state">
+        <div class="empty-icon">🕊️</div>
+        <h3>No hay pedidos {{ filtroEstado() !== 'all' ? 'en este estado' : 'activos' }}</h3>
+        <p>Los nuevos pedidos aparecerán aquí automáticamente</p>
+      </div>
+    } @else {
+      <div class="pedidos-grid">
+        @for (pedido of pedidosFiltrados(); track pedido.id) {
+          <div class="pedido-card" [class.nuevo]="pedido.nuevo">
+            <!-- Cabecera -->
+            <div class="pedido-header">
+              <div class="pedido-info">
+                <span class="order-number">#{{ pedido.orderNumber }}</span>
+                <span class="mesa">Mesa {{ pedido.tableNumber }}</span>
+                <span class="tiempo">{{ getTimeAgo(pedido.createdAt) }}</span>
+              </div>
+              <span class="estado-pago {{ getStatusClass(pedido.status) }}">
+                {{ getStatusLabel(pedido.status) }}
+              </span>
+            </div>
+
+            <!-- Cliente y Pago -->
+            <div class="cliente-info">
+              <span class="cliente-nombre">👤 {{ pedido.customerName }}</span>
+              <span class="metodo-pago">
+                <img 
+                  [src]="getPaymentIcon(pedido.paymentMethod)" 
+                  [alt]="pedido.paymentMethod"
+                  class="payment-icon"
+                  (error)="onImageError($event)"
+                />
+                {{ pedido.paymentMethod }}
+              </span>
+            </div>
+
+            <!-- Items del pedido -->
+            <div class="items-lista">
+              @for (item of pedido.items; track item.productId) {
+                <div class="item-row">
+                  <span class="item-cantidad">{{ item.quantity }}×</span>
+                  <span class="item-nombre">{{ item.productName }}</span>
+                  <span class="item-precio">{{ formatPrice(item.subtotal) }}</span>
+                </div>
+              }
+            </div>
+
+            <!-- Total -->
+            <div class="pedido-total">
+              <span>Total</span>
+              <span class="total-monto">{{ formatPrice(pedido.total) }}</span>
+            </div>
+
+            <!-- ACCIONES SEGÚN ESTADO -->
+            <div class="pedido-footer">
+              @if (pedido.status === 'PENDING' || pedido.status === 'PAID') {
+                <button class="btn-aceptar" (click)="aceptarPedido(pedido.id)">
+                  ✅ Aceptar pedido
+                </button>
+              } @else if (pedido.status === 'PREPARING') {
+                <button class="btn-preparando" disabled>
+                  👨‍🍳 En preparación...
+                </button>
+                <button class="btn-listoo" (click)="marcarListo(pedido.id)">
+                  🍽️ Marcar listo
+                </button>
+              } @else if (pedido.status === 'READY') {
+                <button class="btn-entregar" (click)="completarPedido(pedido.id)">
+                  🚚 Entregar a mesa
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    }
+  </main>
+</div>

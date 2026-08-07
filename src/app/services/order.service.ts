@@ -1,11 +1,11 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { firstValueFrom } from 'rxjs';
+import { HttpClient, HttpParams } from '@angular/common/http';
+import { firstValueFrom, Observable } from 'rxjs';
 
 import { CartItem, OrderInfo, PaymentMethod, Product } from '../models/product.model';
+import { Order } from '../models/order.model';
 
 const CART_KEY = 'yrelis-cart';
-// Cambia aquí si tu backend corre en otra URL/puerto.
 const API_URL = 'http://localhost:8080';
 
 interface OrderItemPayload {
@@ -140,6 +140,88 @@ export class OrderService {
     this.lastOrderSignal.set(info);
     this.itemsSignal.set([]);
     return info;
+  }
+
+  /* ================================================================
+     🔥 NUEVOS MÉTODOS PARA EL MESERO
+     ================================================================ */
+
+  /**
+   * Obtener todos los pedidos con paginación y filtros
+   */
+  getOrders(page: number = 0, size: number = 10, status?: string): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+    
+    if (status) {
+      params = params.set('status', status);
+    }
+    
+    return this.http.get<any>(`${API_URL}/api/orders`, { params });
+  }
+
+  /**
+   * Obtener pedidos activos (PENDING, PAID, PREPARING, READY)
+   */
+  getActiveOrders(): Observable<Order[]> {
+    return this.http.get<Order[]>(`${API_URL}/api/orders/active`);
+  }
+
+  /**
+   * Obtener pedido por ID
+   */
+  getOrderById(orderId: number): Observable<Order> {
+    return this.http.get<Order>(`${API_URL}/api/orders/${orderId}`);
+  }
+
+  /**
+   * Actualizar estado del pedido
+   */
+  updateOrderStatus(orderId: number, status: string): Observable<Order> {
+    return this.http.patch<Order>(`${API_URL}/api/orders/${orderId}/status`, { status });
+  }
+
+  /**
+   * Marcar pedido como completado
+   */
+  completeOrder(orderId: number): Observable<Order> {
+    return this.http.patch<Order>(`${API_URL}/api/orders/${orderId}/complete`, {});
+  }
+
+  /**
+   * Marcar pedido como en preparación
+   */
+  startPreparingOrder(orderId: number): Observable<Order> {
+    return this.http.patch<Order>(`${API_URL}/api/orders/${orderId}/start-preparing`, {});
+  }
+
+  /**
+   * Marcar pedido como listo para servir
+   */
+  markOrderReady(orderId: number): Observable<Order> {
+    return this.http.patch<Order>(`${API_URL}/api/orders/${orderId}/ready`, {});
+  }
+
+  /**
+   * Cancelar pedido
+   */
+  cancelOrder(orderId: number, reason?: string): Observable<Order> {
+    return this.http.patch<Order>(`${API_URL}/api/orders/${orderId}/cancel`, { reason });
+  }
+
+  /**
+   * Obtener estadísticas del día
+   */
+  getDailyStats(): Observable<any> {
+    return this.http.get<any>(`${API_URL}/api/orders/stats/daily`);
+  }
+
+  /**
+   * Obtener pedidos por mesa
+   */
+  getOrdersByTable(tableNumber: number): Observable<Order[]> {
+    return this.http.get<Order[]>(`${API_URL}/api/orders/table/${tableNumber}`);
   }
 
   /* ---------------- Persistencia local ---------------- */
