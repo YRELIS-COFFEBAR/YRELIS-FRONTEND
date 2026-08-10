@@ -7,9 +7,13 @@
     "ng": "ng",
     "start": "ng serve --host 0.0.0.0 --port 4200",
     "start:lan": "ng serve --host 0.0.0.0 --port 4200 --open",
+    "start:prod": "ng serve --host 0.0.0.0 --port 4200 --configuration=production",
+    "start:staging": "ng serve --host 0.0.0.0 --port 4200 --configuration=staging",
     "build": "ng build",
-    "build:prod": "ng build --configuration production",
-    "watch": "ng build --watch --configuration development"
+    "build:prod": "ng build --configuration=production",
+    "build:staging": "ng build --configuration=staging",
+    "watch": "ng build --watch --configuration=development",
+    "test": "ng test"
   },
   "dependencies": {
     "@angular/animations": "20.3.27",

@@ -33,12 +33,15 @@
       </div>
     } @else {
       <div class="cart-layout">
-        <!-- Lista de items -->
         <div class="cart-list">
           @for (item of order.items(); track item.product.id) {
             <article class="cart-item">
               <div class="cart-item-media">
-                <img [src]="item.product.image" [alt]="item.product.name" (error)="onImageError($event)" />
+                <img 
+                  [src]="item.product.image || 'assets/images/placeholder.svg'" 
+                  [alt]="item.product.name" 
+                  (error)="onImageError($event)" 
+                />
               </div>
 
               <div class="cart-item-info">
@@ -48,8 +51,8 @@
                     @if (item.product.unit) {
                       <span class="cart-item-unit">{{ item.product.unit }}</span>
                     }
-                    @if (item.product.addon) {
-                      <p class="cart-item-addon">+ {{ item.product.addon.label }}</p>
+                    @if (item.product.addon_label) {
+                      <p class="cart-item-addon">+ {{ item.product.addon_label }}</p>
                     }
                   </div>
                   <button
@@ -94,7 +97,6 @@
           }
         </div>
 
-        <!-- Resumen -->
         <aside class="summary">
           <h2 class="summary-title">Resumen</h2>
 

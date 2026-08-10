@@ -57,6 +57,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "src": "src/environments/environment.ts",
+                  "replaceWith": "src/environments/environment.prod.ts"
+                }
+              ],
               "budgets": [
                 {
                   "type": "initial",
@@ -75,6 +81,18 @@
               "namedChunks": false,
               "extractLicenses": true
             },
+            "staging": {
+              "fileReplacements": [
+                {
+                  "src": "src/environments/environment.ts",
+                  "replaceWith": "src/environments/environment.staging.ts"
+                }
+              ],
+              "optimization": true,
+              "sourceMap": true,
+              "namedChunks": false,
+              "extractLicenses": true
+            },
             "development": {
               "optimization": false,
               "extractLicenses": false,
@@ -89,6 +107,9 @@
           "configurations": {
             "production": {
               "buildTarget": "yrelis-coffeebar-frontend:build:production"
+            },
+            "staging": {
+              "buildTarget": "yrelis-coffeebar-frontend:build:staging"
             },
             "development": {
               "buildTarget": "yrelis-coffeebar-frontend:build:development"

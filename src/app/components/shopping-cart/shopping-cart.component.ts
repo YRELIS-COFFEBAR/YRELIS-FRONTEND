@@ -1,11 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { CommonModule } from '@angular/common';
 
 import { OrderService } from '../../services/order.service';
 
 @Component({
   selector: 'app-shopping-cart',
-  imports: [RouterLink],
+  standalone: true,
+  imports: [RouterLink, CommonModule],
   templateUrl: './shopping-cart.component.html',
   styleUrl: './shopping-cart.component.css',
 })
@@ -18,13 +20,6 @@ export class ShoppingCartComponent {
 
   onImageError(event: Event): void {
     const img = event.target as HTMLImageElement;
-    const current = img.getAttribute('src') ?? '';
-    if (current.includes('.svg')) {
-      img.onerror = null;
-      img.src = 'assets/images/placeholder.svg';
-      return;
-    }
-    const name = current.split('/').pop()?.replace(/\.(png|jpe?g)$/i, '') ?? 'generic';
-    img.src = `assets/images/placeholders/${name}.svg`;
+    img.src = 'assets/images/placeholder.svg';
   }
 }
