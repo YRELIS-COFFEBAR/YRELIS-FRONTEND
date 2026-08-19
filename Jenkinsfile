@@ -2,8 +2,7 @@ pipeline {
   agent any
 
   environment {
-    NODE_VERSION = '22'
-    PROJECT_DIR  = 'yrelis-coffeebar-frontend'
+    PROJECT_DIR = 'yrelis-coffeebar-frontend'
   }
 
   stages {
@@ -15,9 +14,8 @@ pipeline {
 
     stage('Setup Node') {
       steps {
-        // Usar el nombre exacto de la herramienta configurada en Jenkins
-        // Si tu tool se llama "NodeJS-22", asegúrate de que exista
-        nodejs('NodeJS-22') {
+        // Usa el nombre exacto: node-22
+        nodejs('node-22') {
           sh '''
             node --version
             npm --version
@@ -28,7 +26,7 @@ pipeline {
 
     stage('Instalar dependencias') {
       steps {
-        nodejs('NodeJS-22') {
+        nodejs('node-22') {
           dir(PROJECT_DIR) {
             sh 'npm ci || npm install'
           }
@@ -38,7 +36,7 @@ pipeline {
 
     stage('Compilar (producción)') {
       steps {
-        nodejs('NodeJS-22') {
+        nodejs('node-22') {
           dir(PROJECT_DIR) {
             sh 'npm run build:prod'
           }
