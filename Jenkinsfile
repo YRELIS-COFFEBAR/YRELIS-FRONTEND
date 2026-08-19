@@ -3,23 +3,26 @@ pipeline {
 
   environment {
     NODE_TOOL = 'node-22'
-    PROJECT_DIR = 'yrelis-coffeebar-frontend'
-    REPO_URL = 'https://github.com/YRELIS-COFFEBAR/YRELIS-FRONTEND.git'
   }
 
   stages {
     stage('Checkout') {
       steps {
-        git branch: 'develop', 
-            credentialsId: 'Ardamins', 
-            url: 'https://github.com/YRELIS-COFFEBAR/YRELIS-FRONTEND.git'
+        checkout([
+          $class: 'GitSCM',
+          branches: [[name: 'develop']],
+          userRemoteConfigs: [[
+            url: 'https://github.com/YRELIS-COFFEBAR/YRELIS-FRONTEND.git',
+            credentialsId: 'Ardamins'
+          ]]
+        ])
       }
     }
 
     stage('Setup Node') {
       steps {
         nodejs(env.NODE_TOOL) {
-          sh '''
+          bat '''
             node --version
             npm --version
           '''
@@ -30,7 +33,7 @@ pipeline {
     stage('Instalar dependencias') {
       steps {
         nodejs(env.NODE_TOOL) {
-          sh 'npm ci || npm install'
+          bat 'npm ci || npm install'
         }
       }
     }
@@ -38,14 +41,14 @@ pipeline {
     stage('Compilar (producción)') {
       steps {
         nodejs(env.NODE_TOOL) {
-          sh 'npm run build:prod'
+          bat 'npm run build:prod'
         }
       }
     }
 
     stage('Empaquetar artefacto') {
       steps {
-        sh 'ls -la dist/'
+        bat 'dir dist'
         archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
       }
     }
@@ -56,16 +59,18 @@ pipeline {
       }
       steps {
         echo 'Configura aquí tu despliegue (SSH, Docker, Nginx, S3...)'
+        // Ejemplo con xcopy en Windows:
+        // bat 'xcopy /E /I dist\\* C:\\www\\yrelis\\'
       }
     }
   }
 
   post {
     success {
-      echo '✅ Build de Yrelis CoffeeBar completado correctamente.'
+      echo ' Build de Yrelis CoffeeBar completado correctamente.'
     }
     failure {
-      echo '❌ El build de Yrelis CoffeeBar falló.'
+      echo ' El build de Yrelis CoffeeBar falló.'
     }
   }
 }
