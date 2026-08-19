@@ -60,7 +60,7 @@
               "fileReplacements": [
                 {
                   "src": "src/environments/environment.ts",
-                  "replaceWith": "src/environments/environment.prod.ts"
+                  "replace": "src/environments/environment.prod.ts"
                 }
               ],
               "budgets": [
@@ -85,7 +85,7 @@
               "fileReplacements": [
                 {
                   "src": "src/environments/environment.ts",
-                  "replaceWith": "src/environments/environment.staging.ts"
+                  "replace": "src/environments/environment.staging.ts"
                 }
               ],
               "optimization": true,
