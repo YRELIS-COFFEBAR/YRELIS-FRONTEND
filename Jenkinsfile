@@ -2,20 +2,23 @@ pipeline {
   agent any
 
   environment {
+    NODE_TOOL = 'node-22'
     PROJECT_DIR = 'yrelis-coffeebar-frontend'
+    REPO_URL = 'https://github.com/YRELIS-COFFEBAR/YRELIS-FRONTEND.git'
   }
 
   stages {
     stage('Checkout') {
       steps {
-        checkout scm
+        git branch: 'develop', 
+            credentialsId: 'Ardamins', 
+            url: 'https://github.com/YRELIS-COFFEBAR/YRELIS-FRONTEND.git'
       }
     }
 
     stage('Setup Node') {
       steps {
-        // Usa el nombre exacto: node-22
-        nodejs('node-22') {
+        nodejs(env.NODE_TOOL) {
           sh '''
             node --version
             npm --version
@@ -26,30 +29,33 @@ pipeline {
 
     stage('Instalar dependencias') {
       steps {
-        nodejs('node-22') {
-          dir(PROJECT_DIR) {
-            sh 'npm ci || npm install'
-          }
+        nodejs(env.NODE_TOOL) {
+          sh 'npm ci || npm install'
         }
       }
     }
 
     stage('Compilar (producción)') {
       steps {
-        nodejs('node-22') {
-          dir(PROJECT_DIR) {
-            sh 'npm run build:prod'
-          }
+        nodejs(env.NODE_TOOL) {
+          sh 'npm run build:prod'
         }
       }
     }
 
     stage('Empaquetar artefacto') {
       steps {
-        dir(PROJECT_DIR) {
-          sh 'ls -la dist/'
-          archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
-        }
+        sh 'ls -la dist/'
+        archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+      }
+    }
+
+    stage('Desplegar (opcional)') {
+      when {
+        branch 'main'
+      }
+      steps {
+        echo 'Configura aquí tu despliegue (SSH, Docker, Nginx, S3...)'
       }
     }
   }
