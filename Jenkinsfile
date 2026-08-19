@@ -1,139 +1,67 @@
 pipeline {
-    agent any
+  agent any
 
-    environment {
-        // Usar el nombre exacto de tu instalación de Node.js en Jenkins
-        NODEJS_HOME = tool name: 'NodeJS-22', type: 'nodejs'
-        REPO_URL = 'https://github.com/YRELIS-COFFEBAR/YRELIS-FRONTEND.git'
-        BRANCH = 'develop'
+  environment {
+    NODE_VERSION = '22'
+    PROJECT_DIR  = 'yrelis-coffeebar-frontend'
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
 
-    stages {
-        stage('Checkout') {
-            steps {
-                script {
-                    echo "📥 Clonando repositorio: ${REPO_URL}"
-                    checkout([
-                        $class: 'GitSCM',
-                        branches: [[name: "*/${BRANCH}"]],
-                        userRemoteConfigs: [[
-                            url: REPO_URL,
-                            credentialsId: 'Ardamins'
-                        ]],
-                        extensions: [
-                            [$class: 'CleanBeforeCheckout'],
-                            [$class: 'CloneOption', depth: 1, shallow: true]
-                        ]
-                    ])
-                    sh 'ls -la'
-                }
-            }
+    stage('Setup Node') {
+      steps {
+        // Usar el nombre exacto de la herramienta configurada en Jenkins
+        // Si tu tool se llama "NodeJS-22", asegúrate de que exista
+        nodejs('NodeJS-22') {
+          sh '''
+            node --version
+            npm --version
+          '''
         }
-
-        stage('Setup Node.js') {
-            steps {
-                script {
-                    // Usar Node.js desde la herramienta configurada
-                    def nodeHome = tool name: 'NodeJS-22', type: 'nodejs'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                    sh '''
-                        echo "Node version: $(node --version)"
-                        echo "NPM version: $(npm --version)"
-                    '''
-                }
-            }
-        }
-
-        stage('Instalar dependencias') {
-            steps {
-                script {
-                    def nodeHome = tool name: 'NodeJS-22', type: 'nodejs'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                    sh '''
-                        echo "📦 Instalando dependencias..."
-                        if [ -f package-lock.json ]; then
-                            npm ci --cache .npm --prefer-offline
-                        else
-                            npm install
-                        fi
-                    '''
-                }
-            }
-        }
-
-        stage('Compilar') {
-            steps {
-                script {
-                    def nodeHome = tool name: 'NodeJS-22', type: 'nodejs'
-                    env.PATH = "${nodeHome}/bin:${env.PATH}"
-                    sh '''
-                        echo "🔨 Compilando proyecto..."
-                        # Intentar diferentes scripts de build
-                        if npm run | grep -q "build:prod"; then
-                            npm run build:prod
-                        elif npm run | grep -q "build"; then
-                            npm run build
-                        else
-                            echo "⚠️ No se encontró script de build"
-                            npm run build || ng build
-                        fi
-                    '''
-                }
-            }
-        }
-
-        stage('Empaquetar artefacto') {
-            steps {
-                script {
-                    echo "📦 Buscando artefactos..."
-                    // Buscar diferentes rutas de distribución
-                    def distPaths = [
-                        'dist/yrelis-coffeebar-frontend',
-                        'dist',
-                        'build'
-                    ]
-                    def foundPath = null
-                    for (path in distPaths) {
-                        if (fileExists(path)) {
-                            foundPath = path
-                            echo "✅ Artefacto encontrado en: ${foundPath}"
-                            break
-                        }
-                    }
-                    if (foundPath) {
-                        archiveArtifacts artifacts: "${foundPath}/**/*", fingerprint: true
-                    } else {
-                        echo "⚠️ No se encontraron artefactos, creando archivo de log..."
-                        sh 'echo "No se encontraron artefactos" > build.log'
-                        archiveArtifacts artifacts: 'build.log', fingerprint: true
-                    }
-                }
-            }
-        }
+      }
     }
 
-    post {
-        always {
-            script {
-                echo '🧹 Limpiando espacio de trabajo...'
-                // Usar cleanWs con try-catch para evitar errores
-                try {
-                    cleanWs()
-                } catch (err) {
-                    echo "⚠️ Error limpiando workspace: ${err.message}"
-                }
-            }
+    stage('Instalar dependencias') {
+      steps {
+        nodejs('NodeJS-22') {
+          dir(PROJECT_DIR) {
+            sh 'npm ci || npm install'
+          }
         }
-        success {
-            echo '✅ Build de YRELIS-FRONTEND completado EXITOSAMENTE.'
-            echo "📦 Artefacto disponible en: ${BUILD_URL}artifact/"
-        }
-        failure {
-            echo '❌ Build de YRELIS-FRONTEND FALLÓ.'
-            echo "🔍 Revisa los logs en: ${BUILD_URL}console"
-        }
-        aborted {
-            echo '⚠️ El build fue cancelado.'
-        }
+      }
     }
+
+    stage('Compilar (producción)') {
+      steps {
+        nodejs('NodeJS-22') {
+          dir(PROJECT_DIR) {
+            sh 'npm run build:prod'
+          }
+        }
+      }
+    }
+
+    stage('Empaquetar artefacto') {
+      steps {
+        dir(PROJECT_DIR) {
+          sh 'ls -la dist/'
+          archiveArtifacts artifacts: 'dist/**/*', fingerprint: true
+        }
+      }
+    }
+  }
+
+  post {
+    success {
+      echo '✅ Build de Yrelis CoffeeBar completado correctamente.'
+    }
+    failure {
+      echo '❌ El build de Yrelis CoffeeBar falló.'
+    }
+  }
 }
